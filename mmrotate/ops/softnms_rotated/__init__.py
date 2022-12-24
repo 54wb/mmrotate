@@ -1,0 +1,1 @@
+from .softnms_rotated_wrapper import softnms_rotated

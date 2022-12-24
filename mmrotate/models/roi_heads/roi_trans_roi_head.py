@@ -1,13 +1,13 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from abc import ABCMeta
-
+import copy
 import torch
 from mmcv.runner import BaseModule, ModuleList
-from mmdet.core import bbox2roi
+from mmdet.core import bbox2roi,bbox_mapping 
 
-from mmrotate.core import (build_assigner, build_sampler, obb2xyxy,
-                           rbbox2result, rbbox2roi)
-from ..builder import ROTATED_HEADS, build_head, build_roi_extractor
+from mmrotate.core import (build_assigner, build_sampler, obb2xyxy, 
+                           rbbox2result, rbbox2roi, multiclass_nms_rotated, merge_aug_rbboxes)
+from ..builder import (ROTATED_HEADS, build_head, build_roi_extractor)
 
 
 @ROTATED_HEADS.register_module()
@@ -212,7 +212,7 @@ class RoITransRoIHead(BaseModule, metaclass=ABCMeta):
 
                 for j in range(num_imgs):
                     if i == 0:
-                        gt_tmp_bboxes = obb2xyxy(gt_bboxes[j], self.version)
+                        gt_tmp_bboxes = obb2xyxy(gt_bboxes[j], self.version)           #the first stage, use hbb(x,y,x,y) to RoI Align
                     else:
                         gt_tmp_bboxes = gt_bboxes[j]
                     assign_result = bbox_assigner.assign(
@@ -352,5 +352,69 @@ class RoITransRoIHead(BaseModule, metaclass=ABCMeta):
         return results
 
     def aug_test(self, features, proposal_list, img_metas, rescale=False):
-        """Test with augmentations."""
-        raise NotImplementedError
+        """Test with augmentations.
+        
+        if rescale is False, then returned bboxes will fit the scale 
+        of img[0]
+        """
+        assert self.with_bbox, 'Bbox head must be implemented.'
+
+        rcnn_test_cfg = self.test_cfg
+        aug_bboxes = []
+        aug_scores = []
+        for x, img_meta in zip(features, img_metas):
+            # only one image in the batch
+            img_shape = img_meta[0]['img_shape']
+            scale_factor = img_meta[0]['scale_factor']
+            flip = img_meta[0]['flip']
+            flip_direction = img_meta[0]['flip_direction']
+
+            proposals = copy.deepcopy(proposal_list[0]) 
+            proposals[:,:4] = bbox_mapping(proposal_list[0][:, :4], img_shape,
+                                     scale_factor, flip, flip_direction) 
+            
+            # "ms" in varible names means multi-stage
+            ms_scores = []
+            
+            rois = bbox2roi([proposals])
+
+            for i in range(self.num_stages):
+                bbox_results = self._bbox_forward(i, x, rois)
+                cls_score = bbox_results['cls_score']
+                ms_scores.append(cls_score)
+
+                if i < self.num_stages - 1:
+                    if self.bbox_head[i].custom_activation:
+                        cls_score = [
+                            self.bbox_head[i].loss_cls.get_activation(cls_score)
+                        ]
+                    bbox_label = cls_score[:,:-1].argmax(dim=1)
+                    rois = torch.cat([
+                        self.bbox_head[i].regress_by_class(
+                            rois, bbox_label, bbox_results['bbox_pred'], img_meta[0])
+                    ])
+            cls_score = sum(ms_scores) / float(len(ms_scores))
+            bboxes, scores = self.bbox_head[-1].get_bboxes(
+                rois,
+                cls_score,
+                bbox_results['bbox_pred'],
+                img_shape,
+                scale_factor,
+                rescale=False,
+                cfg=None)
+            aug_bboxes.append(bboxes)
+            aug_scores.append(scores)
+        
+
+        # after merging,bboxes will be rescaled to the original image size
+        merged_bboxes, merged_scores = merge_aug_rbboxes(aug_bboxes, aug_scores, img_metas, rcnn_test_cfg)
+        det_bboxes, det_labels = multiclass_nms_rotated(merged_bboxes, merged_scores, 
+                                                        rcnn_test_cfg.score_thr, rcnn_test_cfg.nms,
+                                                        rcnn_test_cfg.max_per_img)
+        bbox_results = rbbox2result(det_bboxes, det_labels, self.bbox_head[-1].num_classes)
+
+        return [bbox_results]
+
+
+
+

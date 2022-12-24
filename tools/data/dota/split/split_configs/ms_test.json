@@ -1,7 +1,7 @@
 {
   "nproc": 10,
   "img_dirs": [
-    "data/DOTA/test/images/"
+    "data/DOTA1_0/test/images/"
   ],
   "ann_dirs": null,
   "sizes": [

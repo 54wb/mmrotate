@@ -2,9 +2,12 @@
 import warnings
 
 import torch
-
+import numpy as np
+import mmcv
+import os.path as osp
 from ..builder import ROTATED_DETECTORS, build_backbone, build_head, build_neck
 from .base import RotatedBaseDetector
+from mmdet.core.visualization import imshow_det_bboxes
 
 
 @ROTATED_DETECTORS.register_module()
@@ -193,3 +196,36 @@ class RotatedTwoStageDetector(RotatedBaseDetector):
         proposal_list = self.rpn_head.aug_test_rpn(x, img_metas)
         return self.roi_head.aug_test(
             x, proposal_list, img_metas, rescale=rescale)
+
+
+    def show_proposals(self, proposal_list, img_metas, score_thr=0.95, bbox_color=(72,101,241),
+                       text_color=(72,101,241), mask_color=None, thickness=2,
+                       font_size=13, win_name='', show=False, wait_time=0, out_file=None):
+        img = img_metas[0]['filename']
+        bboxes = proposal_list[0].cpu().numpy()
+        class_names = self.CLASSES
+        img = mmcv.imread(img)
+        img = img.copy()      
+        labels = np.ones(bboxes.shape[0],dtype='int64')
+        segms = None
+        out_file = osp.join('work_dirs/debug/vis',img_metas[0]['ori_filename'])
+        if out_file is not None:
+            show = False
+        #draw bounding boxes
+        img = imshow_det_bboxes(
+            img,
+            bboxes,
+            labels,
+            segms,
+            class_names=class_names,
+            score_thr=score_thr,
+            bbox_color=bbox_color,
+            text_color=text_color,
+            mask_color=mask_color,
+            thickness=thickness,
+            font_size=font_size,
+            win_name=win_name,
+            show=show,
+            wait_time=wait_time,
+            out_file=out_file
+        )

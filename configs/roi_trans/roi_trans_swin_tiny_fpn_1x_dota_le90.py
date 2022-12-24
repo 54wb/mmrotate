@@ -1,6 +1,6 @@
 _base_ = ['./roi_trans_r50_fpn_1x_dota_le90.py']
 
-pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth'  # noqa
+pretrained = '/home/lwb/work/code/mmrotate/work_dirs/pretrain/swin_tiny_patch4_window7_224.pth'  # noqa
 
 model = dict(
     backbone=dict(
@@ -28,7 +28,7 @@ model = dict(
         out_channels=256,
         num_outs=5))
 
-data = dict(samples_per_gpu=1, workers_per_gpu=1)
+
 
 optimizer = dict(
     _delete_=True,
@@ -42,3 +42,5 @@ optimizer = dict(
             'relative_position_bias_table': dict(decay_mult=0.),
             'norm': dict(decay_mult=0.)
         }))
+lr_config = dict(warmup_iters=1000, step=[8,11])
+runner = dict(max_epochs=12)

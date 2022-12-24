@@ -1,4 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import numpy as np
+import shapely.geometry as shgeo
 from mmcv.ops import box_iou_rotated
 
 from .builder import ROTATED_IOU_CALCULATORS
@@ -87,3 +89,71 @@ def rbbox_overlaps(bboxes1, bboxes2, mode='iou', is_aligned=False):
     clamped_bboxes2[:, 2:4].clamp_(min=1e-3)
 
     return box_iou_rotated(clamped_bboxes1, clamped_bboxes2, mode, is_aligned)
+
+
+
+def bbox_overlaps(bboxes1, bboxes2, mode='iou', is_aligned=False, eps=1e-6):
+    """caculator the overlap between two bboxes no matter its type"""
+    
+    """
+    Args:
+        bboxes1 (numpy.array):shape(n,8)  (x1,y1,x2,y2,x3,y3,x4,y4)
+        bboxes2 (numpy.array):shape(1,4)  (xlt,ylt,xrb,yrb)
+
+    """
+    assert mode in ['iou', 'iof']
+    rows = bboxes1.shape[0]
+    cols = bboxes2.shape[0]
+    if is_aligned:
+        assert rows == cols
+
+    if rows * cols == 0:
+        return np.zeros((rows, 1), dtype=np.float32) \
+                if is_aligned else np.zeros((rows, cols), dtype=np.float32)
+
+    hbboxes1 = poly2xyxy(bboxes1)
+    hbboxes2 = bboxes2
+    if not is_aligned:
+        hbboxes1 = hbboxes1[:, None, :]
+    lt = np.maximum(hbboxes1[..., :2], hbboxes2[..., :2])
+    rb = np.minimum(hbboxes1[..., 2:], hbboxes2[..., 2:])
+    wh = np.clip(rb - lt, 0, np.inf)
+    h_overlaps = wh[..., 0] * wh[..., 1]
+    
+    polys1 = bboxes1
+    polys2 = xyxy2poly(bboxes2)
+    sg_polys1 = [shgeo.Polygon(p) for p in polys1.reshape(rows, -1, 2)]
+    sg_polys2 = [shgeo.Polygon(p) for p in polys2.reshape(cols, -1, 2)]
+
+    overlaps = np.zeros(h_overlaps.shape)
+    for p in zip(*np.nonzero(h_overlaps)):
+        try:
+            overlaps[p] = sg_polys1[p[0]].intersection(sg_polys2[p[-1]]).area
+        except:
+            overlaps[p] = 0
+
+    if mode == 'iou':
+        unions = np.zeros(h_overlaps.shape, dtype=np.float32)
+        for p in zip(*np.nonzero(h_overlaps)):
+            unions[p] = sg_polys1[p[0]].union(sg_polys2[p[-1]]).area
+    else:
+        unions = np.array([p.area for p in sg_polys1], dtype=np.float32)
+        if not is_aligned:
+            unions = unions[..., None]
+
+    unions = np.clip(unions, eps, np.inf)
+    outputs = overlaps / unions
+    if outputs.ndim == 1:
+        outputs = outputs[..., None]
+    return outputs
+
+def poly2xyxy(polys):
+    shape = polys.shape
+    polys = polys.reshape(*shape[:-1],shape[-1]//2,2)
+    lt_point = np.min(polys, axis=-2)
+    rb_point = np.max(polys, axis=-2)
+    return np.concatenate([lt_point, rb_point], axis=-1)
+
+def xyxy2poly(hbboxes):
+    l, t, r, b = [hbboxes[..., i] for i in range(4)]
+    return np.stack([l, t, r, t, r, b, l, b], axis=-1)

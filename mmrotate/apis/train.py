@@ -3,14 +3,13 @@
 import torch
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 from mmcv.runner import (DistSamplerSeedHook, EpochBasedRunner,
-                         Fp16OptimizerHook, OptimizerHook, build_optimizer,
-                         build_runner)
+                         Fp16OptimizerHook, OptimizerHook, build_runner)
 from mmdet.core import DistEvalHook, EvalHook
 from mmdet.datasets import (build_dataloader, build_dataset,
                             replace_ImageToTensor)
 
 from mmrotate.utils import compat_cfg, find_latest_checkpoint, get_root_logger
-
+from mmrotate.core.optimizers import build_optimizer
 
 def train_detector(model,
                    dataset,

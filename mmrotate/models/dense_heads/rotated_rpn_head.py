@@ -259,7 +259,7 @@ class RotatedRPNHead(AnchorHead):
             cls_score (torch.Tensor): Box scores for each scale level
                 Has shape (N, num_anchors * num_classes, H, W).
             bbox_pred (torch.Tensor): Box energies / deltas for each scale
-                level with shape (N, num_anchors * 5, H, W).
+                level with shape (N, num_anchors * 4, H, W).
             anchors (torch.Tensor): Box reference for each scale level with
                 shape (N, num_total_anchors, 4).
             labels (torch.Tensor): Labels of each anchors with shape

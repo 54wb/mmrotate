@@ -154,7 +154,7 @@ model = dict(
                     ignore_iof_thr=-1,
                     iou_calculator=dict(type='RBboxOverlaps2D')),
                 sampler=dict(
-                    type='RRandomSampler',
+                    type='ROHEMSampler',
                     num=512,
                     pos_fraction=0.25,
                     neg_pos_ub=-1,
@@ -180,6 +180,7 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='RCopyPaste',img_scale=(1024,1024),is_resample=True),
     dict(type='RResize', img_scale=(1024, 1024)),
     dict(
         type='RRandomFlip',

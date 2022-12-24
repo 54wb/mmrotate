@@ -28,6 +28,8 @@ class RotatedStandardRoIHead(BaseModule, metaclass=ABCMeta):
     def __init__(self,
                  bbox_roi_extractor=None,
                  bbox_head=None,
+                 cls_roi_extractor=None,
+                 cls_head=None,
                  shared_head=None,
                  train_cfg=None,
                  test_cfg=None,
@@ -46,10 +48,14 @@ class RotatedStandardRoIHead(BaseModule, metaclass=ABCMeta):
 
         if bbox_head is not None:
             self.init_bbox_head(bbox_roi_extractor, bbox_head)
-
+        
+        if cls_head is not None:
+            self.init_cls_head(cls_roi_extractor, cls_head)
+        
         self.init_assigner_sampler()
 
         self.with_bbox = True if bbox_head is not None else False
+        self.with_cls = True if cls_head is not None else False
         self.with_shared_head = True if shared_head is not None else False
 
     def init_assigner_sampler(self):
@@ -70,7 +76,17 @@ class RotatedStandardRoIHead(BaseModule, metaclass=ABCMeta):
         """
         self.bbox_roi_extractor = build_roi_extractor(bbox_roi_extractor)
         self.bbox_head = build_head(bbox_head)
+    
+    def init_cls_head(self, cls_roi_extractor, cls_head):
+        if cls_roi_extractor is not None:
+            self.cls_roi_extractor = build_roi_extractor(cls_roi_extractor)
+            self.share_roi_extractor = False
+        else:
+            self.share_roi_extractor = True
+            self.cls_roi_extractor = self.bbox_roi_extractor
+        self.cls_head = build_head(cls_head)
 
+        
     def forward_dummy(self, x, proposals):
         """Dummy forward function.
 
@@ -251,12 +267,18 @@ class RotatedStandardRoIHead(BaseModule, metaclass=ABCMeta):
 
         det_bboxes, det_labels = self.simple_test_bboxes(
             x, img_metas, proposal_list, self.test_cfg, rescale=rescale)
-
-        bbox_results = [
-            rbbox2result(det_bboxes[i], det_labels[i],
-                         self.bbox_head.num_classes)
-            for i in range(len(det_bboxes))
-        ]
+        if self.bbox_head.num_classes == 5:
+            bbox_results = [
+                rbbox2result(det_bboxes[i], det_labels[i],
+                            self.cls_head.num_classes)
+                for i in range(len(det_bboxes))
+            ]
+        else:
+            bbox_results = [
+                rbbox2result(det_bboxes[i], det_labels[i],
+                            self.cls_head.num_classes)
+                for i in range(len(det_bboxes))
+            ]
 
         return bbox_results
 

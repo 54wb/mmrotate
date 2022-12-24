@@ -1,14 +1,17 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
-
+import os.path as osp
 import cv2
 import mmcv
+import random
+import torch
 import numpy as np
 from mmdet.datasets.pipelines.transforms import (Mosaic, RandomCrop,
                                                  RandomFlip, Resize)
-from numpy import random
 
-from mmrotate.core import norm_angle, obb2poly_np, poly2obb_np
+from mmrotate.core import (norm_angle, obb2poly_np, poly2obb_np, 
+                           rbbox_overlaps, bbox_overlaps, obb2poly, 
+                           imshow_det_rbboxes, poly2obb)
 from ..builder import ROTATED_PIPELINES
 
 
@@ -466,9 +469,9 @@ class RMosaic(Mosaic):
 
         # mosaic center x, y
         center_x = int(
-            random.uniform(*self.center_ratio_range) * self.img_scale[1])
+            np.random.uniform(*self.center_ratio_range) * self.img_scale[1])
         center_y = int(
-            random.uniform(*self.center_ratio_range) * self.img_scale[0])
+            np.random.uniform(*self.center_ratio_range) * self.img_scale[0])
         center_position = (center_x, center_y)
 
         loc_strs = ('top_left', 'top_right', 'bottom_left', 'bottom_right')
@@ -544,3 +547,348 @@ class RMosaic(Mosaic):
                      (bbox_h > self.min_bbox_size)
         valid_inds = np.nonzero(valid_inds)[0]
         return bboxes[valid_inds], labels[valid_inds]
+
+def find_inside_objs(bboxes, target_h, target_w, iof_thre=0.7):
+    # image_box = np.array([[target_w / 2, target_h / 2, target_w, target_h, 0]], dtype=bboxes.dtype) # TODO: TEST
+    image_box = np.array([[0, 0, target_w, target_h]], dtype=bboxes.dtype) # TODO: TEST
+    iof = bbox_overlaps(bboxes, image_box, mode="iof")   #NOTE: the image_box is (x,y,x,y)
+    keep_masks = iof > iof_thre # (n, 1)
+    keep_masks = np.squeeze(keep_masks, axis=-1) # (n, )
+    keep_inds = np.nonzero(keep_masks)[0]
+    return keep_inds
+
+@ROTATED_PIPELINES.register_module()
+class RRandomPutImage:
+    def __init__(self, 
+                 img_scale=(1024, 1024),
+                 ratio_range=(0.5, 1.5),
+                 flip_ratio=0.5,
+                 pad_val=114,
+                 max_iters=15,
+                 iof_thre=0.5,
+                 with_put_polys=False):
+        self.dynamic_scale = img_scale
+        self.ratio_range = ratio_range
+        self.flip_ratio = flip_ratio
+        self.pad_val = pad_val
+        self.max_iters = max_iters
+        self.iof_thre = iof_thre
+        self.with_put_polys = with_put_polys
+
+    def __call__(self, results):
+        return self.random_put(results)
+
+    def random_put(self, results):
+        assert "img" in results
+        assert 'mix_results' in results
+        assert len(results['mix_results']) == 1, 'Only support put 2 images'
+
+        if results['mix_results'][0]['gt_bboxes'].shape[0] == 0:
+            return results, None
+
+        retrieve_results = results['mix_results'][0]
+        retrieve_img = retrieve_results['img']
+        results['class'] = retrieve_results['class']
+
+        areas =  retrieve_results['gt_bboxes'][:,2]*retrieve_results['gt_bboxes'][:,3]
+        areas_mean = np.mean(areas)
+        if areas_mean < 1000:
+            jit_factor = random.uniform(1,1.5)
+        else:
+            jit_factor = random.uniform(*self.ratio_range)
+        is_flip = random.uniform(0, 1) > self.flip_ratio
+
+        if len(retrieve_img.shape) == 3:
+            out_img = np.ones(
+                (self.dynamic_scale[0], self.dynamic_scale[1], 3),
+                dtype=retrieve_img.dtype) * self.pad_val
+        else:
+            out_img = np.ones(
+                self.dynamic_scale, dtype=retrieve_img.dtype) * self.pad_val
+
+        # 1. keep_ratio resize
+        scale_ratio = min(self.dynamic_scale[0] / retrieve_img.shape[0],
+                          self.dynamic_scale[1] / retrieve_img.shape[1])
+        retrieve_img = mmcv.imresize(
+            retrieve_img, (int(retrieve_img.shape[1] * scale_ratio),
+                           int(retrieve_img.shape[0] * scale_ratio)))
+
+        # 2. paste
+        out_img[:retrieve_img.shape[0], :retrieve_img.shape[1]] = retrieve_img
+
+        # 3. scale jit
+        scale_ratio *= jit_factor
+        out_img = mmcv.imresize(out_img, (int(out_img.shape[1] * jit_factor),
+                                          int(out_img.shape[0] * jit_factor)))
+
+        # 4. flip
+        if is_flip:
+            out_img = out_img[:, ::-1, :]
+
+        # 5. random crop
+        ori_img = results['img']
+        origin_h, origin_w = out_img.shape[:2]
+        target_h, target_w = ori_img.shape[:2]
+        padded_img = np.zeros(
+            (max(origin_h, target_h), max(origin_w,
+                                          target_w), 3)).astype(np.uint8)
+        padded_img[:origin_h, :origin_w] = out_img
+
+        x_offset, y_offset = 0, 0
+        if padded_img.shape[0] > target_h:
+            y_offset = random.randint(0, padded_img.shape[0] - target_h)
+        if padded_img.shape[1] > target_w:
+            x_offset = random.randint(1, padded_img.shape[1] - target_w)
+        put_img = padded_img[y_offset:y_offset + target_h,
+                                        x_offset:x_offset + target_w]
+
+        # 6. adjust bbox
+        retrieve_gt_polys = obb2poly(torch.tensor(retrieve_results['gt_bboxes']), 'le90')
+        retrieve_gt_polys = np.array(retrieve_gt_polys)
+
+        # retrieve_gt_polys[:, 0::2] = retrieve_gt_polys[:, 0::2] * scale_ratio
+        # retrieve_gt_polys[:, 1::2] = retrieve_gt_polys[:, 1::2] * scale_ratio
+        retrieve_gt_polys = retrieve_gt_polys * scale_ratio
+
+        if is_flip:
+            retrieve_gt_polys[:, 0::2] = origin_w - retrieve_gt_polys[:, 0::2]
+
+        # 7. filter
+        cp_retrieve_gt_polys = retrieve_gt_polys.copy()
+        cp_retrieve_gt_polys[:, 0::2] = \
+            cp_retrieve_gt_polys[:, 0::2] - x_offset
+        cp_retrieve_gt_polys[:, 1::2] = \
+            cp_retrieve_gt_polys[:, 1::2] - y_offset
+
+        inside_keep_inds = find_inside_objs(cp_retrieve_gt_polys, target_h, target_w, iof_thre=self.iof_thre)
+        cp_retrieve_gt_polys = cp_retrieve_gt_polys[inside_keep_inds]
+        
+        gt_bboxes = poly2obb(torch.tensor(cp_retrieve_gt_polys),'le90')
+        retrieve_results["gt_bboxes"] = np.array(gt_bboxes,dtype=np.float32)
+        retrieve_results["gt_labels"] = retrieve_results["gt_labels"][inside_keep_inds]
+        for k in retrieve_results.get("aligned_fields", []):
+            retrieve_results[k] = retrieve_results[k][inside_keep_inds]
+        
+        if self.with_put_polys:
+            retrieve_results["gt_polys"] = cp_retrieve_gt_polys
+        else:
+            retrieve_results.pop("gt_polys", None)
+            
+        retrieve_results["img"] = put_img.astype(np.uint8)
+        retrieve_results["img_shape"] = put_img.shape
+        results["img"] = ori_img.astype(np.uint8)
+        results["img_shape"] = ori_img.shape
+        return results, retrieve_results
+
+    def get_random_results(self, dataset):
+        for _ in range(self.max_iters):
+            index = random.randint(0, len(dataset) - 1) # TODO: test -1
+            gt_bboxes_i = dataset.get_ann_info(index)['bboxes']
+            if len(gt_bboxes_i) != 0:
+                break
+        results = copy.deepcopy(dataset(index))
+        return results
+
+def poly2rbb(poly):
+    bboxps = np.array(poly).reshape((4, 2))
+    rbbox = cv2.minAreaRect(bboxps)
+    x, y, w, h, a = rbbox[0][0], rbbox[0][1], rbbox[1][0], rbbox[1][1], rbbox[
+        2]
+    if w < 2 or h < 2:
+        return
+    a = a / 180 * np.pi
+    if w < h:
+        w, h = h, w
+        a += np.pi / 2
+    while not np.pi / 2 > a >= -np.pi / 2:
+        if a >= np.pi / 2:
+            a -= np.pi
+        else:
+            a += np.pi
+    assert np.pi / 2 > a >= -np.pi / 2
+    return x, y, w, h, a
+
+
+@ROTATED_PIPELINES.register_module()
+class RCopyPaste(RRandomPutImage):
+    def __init__(self,
+                 img_scale=(1024,1024),
+                 ratio_range=(0.5,1.5),
+                 flip_ratio=0.5,
+                 pad_val=114,
+                 copy_choice_prob=1.,
+                 copy_iof_thre=0.5,
+                 is_resample=False,
+                 max_iters=15,
+                 iof_thre=0.5,
+                 ignore_classes=[],
+                 sample_frequency={},
+                 with_polys=False,
+                 version = 'le90'):
+        self.version = version
+        super().__init__(
+            img_scale=img_scale,
+            ratio_range=ratio_range,
+            flip_ratio=flip_ratio,
+            pad_val=pad_val,
+            max_iters=max_iters,
+            with_put_polys=True,
+            iof_thre=iof_thre
+        )
+
+        assert isinstance(img_scale,tuple)
+        self.is_resample = is_resample
+        self.copy_choice_prob = copy_choice_prob
+        self.copy_iof_thre = copy_iof_thre
+        self.with_polys = with_polys
+        self.ignore_classes = ignore_classes
+        self.sample_frequency = sample_frequency
+
+
+    def __call__(self, results): 
+        results = self._copy_transform(results)
+        return results
+
+    def _copy_transform(self,results):
+        ori_results, put_results = self.random_put(results)
+ 
+        if put_results is None or len(put_results['gt_bboxes']) == 0:
+            return ori_results
+
+        put_img = put_results["img"]
+        put_gt_labels = put_results["gt_labels"]
+        put_gt_bboxes = put_results["gt_bboxes"]
+        put_gt_polys = put_results["gt_polys"]
+
+
+        ori_img = ori_results["img"]
+        ori_gt_labels = ori_results["gt_labels"]
+        if "gt_polys" in ori_results:
+            ori_gt_polys = ori_results["gt_polys"]
+        else:
+            ori_gt_polys = ori_results['ann_info']["polygons"]
+        ori_gt_bboxes = ori_results["gt_bboxes"]
+        
+        blank_img = np.zeros(put_img.shape, dtype=np.uint8)
+        keep_inds = []
+        for i, put_gt_poly in enumerate(put_gt_polys):
+            put_gt_rbox = np.array(poly2rbb(put_gt_poly), dtype=ori_gt_bboxes.dtype)
+            ious = rbbox_overlaps(torch.tensor(ori_gt_bboxes), torch.tensor(put_gt_rbox[None]), mode="iof") # (1, num_ori_objs)
+            if (ious < self.copy_iof_thre).all():
+                keep_inds.append(i)
+                cv2.drawContours(
+                    blank_img, [put_gt_poly.reshape(-1, 1, 2).astype(np.int32)], 
+                    -1, (255, 255, 255), cv2.FILLED
+                )
+
+        if len(keep_inds):
+            keep_inds = np.asarray(keep_inds, dtype=np.int64) # (pos, )
+            blank_mask = blank_img > 0
+            ori_img[blank_mask] = put_img[blank_mask]
+            ori_results["gt_labels"] = np.concatenate((ori_gt_labels, put_gt_labels[keep_inds]), axis=0)
+            ori_results["gt_bboxes"] = np.concatenate((ori_gt_bboxes, put_gt_bboxes[keep_inds]), axis=0)
+            for k in ori_results.get("aligned_fields", []):
+                ori_results[k] = np.concatenate((ori_results[k], put_results[k][keep_inds]), axis=0)
+            ori_gt_polys = np.vstack((ori_gt_polys, put_gt_polys[keep_inds]))
+        if self.with_polys:
+            ori_results["gt_polys"] = ori_gt_polys
+        else:
+            ori_results.pop("gt_polys", None)
+
+        ori_results["img"] = ori_img.astype(np.uint8)
+        ori_results["img_shape"] = ori_img.shape
+        #self.vis(ori_results)
+        return ori_results
+
+
+    def get_random_results(self, dataset):
+        self.ignore_classes = list(self.ignore_classes) \
+            if isinstance(self.ignore_classes, tuple) else self.ignore_classes
+        per_cls_indexes = dataset.per_cls_indexes
+        if self.is_resample:
+            max_num_per_cls = max([len(indexes) for indexes in per_cls_indexes])
+            per_cls_frequency = [(1 / len(indexes) * max_num_per_cls) if len(indexes) and i not in self.ignore_classes \
+                else 0 for i, indexes in enumerate(per_cls_indexes)]
+            if not hasattr(self, "per_cls_frequency"):
+                for i, id in enumerate(self.ignore_classes):
+                    if isinstance(id, str):
+                        if id in dataset.CLASSES:
+                            self.ignore_classes[i] = (dataset.CLASSES).index(id)
+                        else:
+                            raise KeyError
+                    elif isinstance(id, int):
+                        self.ignore_classes[i] = id
+                    else:
+                        raise NotImplementedError
+
+            self.per_cls_frequency = per_cls_frequency
+
+            k = random.choices(range(len(self.per_cls_frequency)), self.per_cls_frequency, k=1)[0]
+            class_ids = per_cls_indexes[k]
+            index = class_ids[random.randint(0, len(class_ids) - 1)]
+            results = copy.deepcopy(dataset.__getitem__(index,get_anthor=True))
+            keep_inds = np.nonzero((results["gt_labels"] == k))[0]
+            results["gt_bboxes"] = results["gt_bboxes"][keep_inds]
+            results["gt_labels"] = results["gt_labels"][keep_inds]
+            results['class'] = dataset.CLASSES
+            for k in results.get("aligned_fields", []):
+                results[k] = results[k][keep_inds]
+        return results
+
+    def vis(self,
+            results,
+            score_thr=0.3,
+            bbox_color=(72,101,241),
+            text_color=(72,101,241),
+            mask_color=None,
+            thickness=2,
+            font_size=13,
+            win_name='',
+            show=False,
+            wait_time=0,
+            out_file=None):
+        img = results['img']
+        bboxes = results['gt_bboxes']
+        class_names = results['class']
+        img = mmcv.imread(img)
+        img = img.copy()
+        scores = np.ones((bboxes.shape[0],1))
+        bboxes = np.concatenate((bboxes,scores),1)        
+        labels = results['gt_labels']
+        segms = None
+        out_file = osp.join('work_dirs/debug/vis',results['ori_filename'])
+        if out_file is not None:
+            show = False
+        #draw bounding boxes
+        img = imshow_det_rbboxes(
+            img,
+            bboxes,
+            labels,
+            segms,
+            class_names=class_names,
+            score_thr=score_thr,
+            bbox_color=bbox_color,
+            text_color=text_color,
+            mask_color=mask_color,
+            thickness=thickness,
+            font_size=font_size,
+            win_name=win_name,
+            show=show,
+            wait_time=wait_time,
+            out_file=out_file
+        )
+
+
+
+    def __repr__(self):
+        repr_str = self.__class__.__name__
+        repr_str += f'dynamic_scale={self.dynamic_scale}, '
+        repr_str += f'ratio_range={self.ratio_range}, '
+        repr_str += f'flip_ratio={self.flip_ratio}, '
+        repr_str += f'pad_val={self.pad_val}, '
+        repr_str += f'is_resample={self.is_resample})'
+        repr_str += f'copy_choice_prob={self.copy_choice_prob})'
+        repr_str += f'copy_iou_thre={self.copy_iof_thre})'
+        repr_str += f"max_iters={self.max_iters}"
+        repr_str += f"ignore_classes={self.ignore_classes}"
+        return repr_str

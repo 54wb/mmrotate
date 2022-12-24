@@ -333,6 +333,13 @@ class DOTADataset(CustomDataset):
 
         return result_files, tmp_dir
 
+    def _get_per_cls_num(self):
+        per_cls_indexes = [[] for _ in self.CLASSES]
+        for idx in range(self.num_samples):
+            for class_id in np.unique(self.get_cat_ids(idx)):
+                per_cls_indexes[class_id].append(idx)
+        return per_cls_indexes
+    
 
 def _merge_func(info, CLASSES, iou_thr):
     """Merging patch bboxes into full image.

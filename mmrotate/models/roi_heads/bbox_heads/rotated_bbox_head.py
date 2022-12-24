@@ -8,7 +8,7 @@ from mmdet.core import multi_apply
 from mmdet.models.losses import accuracy
 from mmdet.models.utils import build_linear_layer
 
-from mmrotate.core import build_bbox_coder, multiclass_nms_rotated
+from mmrotate.core import build_bbox_coder, multiclass_nms_rotated, convert_label_inverse
 from ...builder import ROTATED_HEADS, build_loss
 
 
@@ -418,6 +418,64 @@ class RotatedBBoxHead(BaseModule):
             det_bboxes, det_labels = multiclass_nms_rotated(
                 bboxes, scores, cfg.score_thr, cfg.nms, cfg.max_per_img)
             return det_bboxes, det_labels
+    
+    @force_fp32(apply_to=('cls_score', 'bbox_pred', 'fine_cls_score'))
+    def get_bbox(self,
+                 rois,
+                 cls_score,
+                 fine_cls_score,
+                 bbox_pred,
+                 img_shape,
+                 scale_factor,
+                 rescale=False,
+                 cfg=None):
+        """Transform network output for a batch into bbox predictions and choose fine_cls only in coarse_cls"""
+        cls_scores = F.softmax(cls_score, dim=1) if cls_score is not None else None
+        max_scores, max_inds = torch.max(cls_scores, dim=1)
+        det_bboxes = []
+        det_labels = []
+        for i in range(6):
+            num_inds = (max_inds==i)
+            if len(torch.nonzero(num_inds==True)) == 0:
+                continue
+            cls_inds = convert_label_inverse(i)
+            rois_ = rois[num_inds]
+            bbox_pred_ = bbox_pred[num_inds]
+            fine_cls_score_ = fine_cls_score[num_inds]
+            scores = F.softmax(fine_cls_score_, dim=-1) if fine_cls_score_ is not None else None
+            scores_ = scores.new_full(scores.shape, 0)
+            if i == 5:
+                scores_[:,0:cls_inds] = scores[:,0:cls_inds]
+            else:
+                scores_[:, cls_inds] = scores[:, cls_inds]
+            #bbox_pred would be None in some detector 
+            #e.g. Grid R-CNN
+            if bbox_pred_ is not None:
+                bboxes = self.bbox_coder.decode(
+                    rois_[..., 1:], bbox_pred_, max_shape=img_shape)
+            else:
+                bboxes = rois_[:, 1:].clone()
+                if img_shape is not None:
+                    bboxes[:, [0, 2]].clamp_(min=0, max=img_shape[1])
+                    bboxes[:, [1, 3]].clamp_(min=0, max=img_shape[0])
+            if rescale and bboxes.size(0) > 0:
+                scale_factor = bboxes.new_tensor(scale_factor)
+                bboxes = bboxes.view(bboxes.size(0), -1, 5)
+                bboxes[..., :4] = bboxes[..., :4] / scale_factor
+                bboxes = bboxes.view(bboxes.size(0), -1)
+            if cfg is None:
+                return bboxes, scores_
+            else:
+                det_bbox, det_label = multiclass_nms_rotated(
+                    bboxes, scores_, cfg.score_thr, cfg.nms, cfg.max_per_img)
+                det_bboxes.append(det_bbox)
+                det_labels.append(det_label)
+        if det_bboxes == []:
+            return torch.tensor(det_bboxes), torch.tensor(det_labels)
+        det_bboxes = torch.concat(det_bboxes)
+        det_labels = torch.concat(det_labels)   
+        return det_bboxes, det_labels
+
 
     @force_fp32(apply_to=('bbox_preds', ))
     def refine_bboxes(self, rois, labels, bbox_preds, pos_is_gts, img_metas):

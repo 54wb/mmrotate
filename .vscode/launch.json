@@ -1,0 +1,187 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: roi_trans",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_r50_fpn_1x_dota_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: test_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/test.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_r50_fpn_1x_dota_le90.py",
+                "work_dirs/roi_trans_r50_fpn_1x_dota_le90/latest.pth",
+                "--format-only","--eval-options",
+                "submission_dir=work_dirs/debug/test",
+                "nproc=1"
+            ]
+        },
+        {
+            "name": "Python: convnext_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"1"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_convnext_t_fpn_3x_dota_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: swin_base_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"1"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_swin_base_fpn_1x_dota_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: copy_paste_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_swin_tiny_fpn_1x_dota_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: vis_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/test.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"1"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_swin_tiny_fpn_1x_dota_le90.py",
+                "work_dirs/roi_trans_swin_tiny_fpn_1x_dota_le90/epoch_12.pth",
+                "--show-dir","work_dirs/debug/vis/"
+            ]
+        },
+        {
+            "name": "Python: swin_tiny_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_swin_tiny_fpn_1x_dota_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: detectors_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/roi_trans/roi_trans_swin_tiny_rfp_1x_dota_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: orcnn_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/oriented_rcnn/oriented_rcnn_r50_fpn_1x_dota_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: fine_grinted_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_le90.py",
+                "--work-dir",
+                "work_dirs/debug/"
+            ]
+        },
+        {
+            "name": "Python: fine_grinted_test_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/test.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_le90.py",
+                "work_dirs/fine_coarse_orcnn_r50_fpn_1x_fair1m_le90/latest.pth",
+                "--format-only","--eval-options",
+                "submission_dir=work_dirs/debug/test"
+            ]
+        }
+    ]
+}

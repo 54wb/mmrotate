@@ -4,6 +4,20 @@ import math
 import cv2
 import numpy as np
 import torch
+import copy
+
+def get_bbox_type(bboxes, with_score=False):
+    dim = bboxes.shape[-1]
+    if with_score:
+        dim -= 1
+
+    if dim == 4:
+        return 'hbb'
+    if dim == 5:
+        return 'obb'
+    if dim == 8:
+        return 'poly'
+    return 'notype'
 
 
 def bbox_flip(bboxes, img_shape, direction='horizontal'):
@@ -18,8 +32,10 @@ def bbox_flip(bboxes, img_shape, direction='horizontal'):
     Returns:
         Tensor: Flipped bboxes.
     """
-    version = 'oc'
+    version = 'le90'
     assert bboxes.shape[-1] % 5 == 0
+    orig_shape = bboxes.shape
+    bboxes = bboxes.reshape((-1,5))
     assert direction in ['horizontal', 'vertical', 'diagonal']
     flipped = bboxes.clone()
     if direction == 'horizontal':
@@ -36,7 +52,7 @@ def bbox_flip(bboxes, img_shape, direction='horizontal'):
         flipped[rotated_flag, 3] = bboxes[rotated_flag, 2]
     else:
         flipped[:, 4] = norm_angle(np.pi - bboxes[:, 4], version)
-    return flipped
+    return flipped.reshape(orig_shape)
 
 
 def bbox_mapping_back(bboxes,
@@ -48,6 +64,18 @@ def bbox_mapping_back(bboxes,
     new_bboxes = bbox_flip(bboxes, img_shape,
                            flip_direction) if flip else bboxes
     new_bboxes[:, :4] = new_bboxes[:, :4] / new_bboxes.new_tensor(scale_factor)
+    return new_bboxes.view(bboxes.shape)
+
+def bbox_mapping(bboxes,
+                 img_shape,
+                 scale_factor,
+                 flip,
+                 flip_direction='horizontal'):
+    "Map bboxes from original img scale to testing scale"
+    new_bboxes = copy.deepcopy(bboxes)
+    new_bboxes[:,:4] = new_bboxes[:,:4] / new_bboxes.new_tensor(scale_factor)
+    if flip:
+        new_bboxes = bbox_flip(new_bboxes, img_shape, flip_direction)
     return new_bboxes.view(bboxes.shape)
 
 
