@@ -123,13 +123,16 @@ class OrientedFineClsRoIHead(RotatedStandardRoIHead):
         """
         rois = rbbox2roi([res.bboxes for res in sampling_results])
         bbox_results = self._bbox_forward(x, rois)
-        
-        sample_results = copy.deepcopy(sampling_results)
-        for sample_result in sample_results:
-            sample_result.pos_gt_labels = convert_label(sample_result.pos_gt_labels)
+        if self.bbox_head.num_classes == 5:
+            sample_results = copy.deepcopy(sampling_results)
+            for sample_result in sample_results:
+                sample_result.pos_gt_labels = convert_label(sample_result.pos_gt_labels)
 
-        bbox_targets = self.bbox_head.get_targets(sample_results, gt_bboxes,
-                                                  gt_labels, self.train_cfg)
+            bbox_targets = self.bbox_head.get_targets(sample_results, gt_bboxes,
+                                                    gt_labels, self.train_cfg)
+        else:
+            bbox_targets = self.bbox_head.get_targets(sampling_results, gt_bboxes,
+                                                    gt_labels, self.train_cfg) 
         loss_bbox = self.bbox_head.loss(bbox_results['cls_score'],
                                         bbox_results['bbox_pred'], rois,
                                         *bbox_targets)
