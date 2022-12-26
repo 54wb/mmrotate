@@ -276,7 +276,7 @@ class RotatedStandardRoIHead(BaseModule, metaclass=ABCMeta):
         else:
             bbox_results = [
                 rbbox2result(det_bboxes[i], det_labels[i],
-                            self.cls_head.num_classes)
+                            self.bbox_head.num_classes)
                 for i in range(len(det_bboxes))
             ]
 
