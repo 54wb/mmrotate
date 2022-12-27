@@ -41,6 +41,7 @@ class FineClsHead(BaseModule):
                  num_classes=37, 
                  reg_class_agnostic=False,
                  cls_predictor_cfg=dict(type='Linear'),
+                 loss_arcface=None,
                  loss_cls=None,
                  num_shared_fcs=2,
                  init_cfg=None,
@@ -62,6 +63,7 @@ class FineClsHead(BaseModule):
         self.fp16_enabled = False
 
         self.loss_cls = build_loss(loss_cls)
+        self.loss_arcface = build_loss(loss_arcface)
         
         self.num_shared_fcs = num_shared_fcs
         
@@ -74,12 +76,14 @@ class FineClsHead(BaseModule):
             self.in_channels,
             kernel_size=3,
             padding=1)
+        self.BN1 = nn.BatchNorm2d(self.in_channels)
         #mask_conv make a learnable mask for roi feature
         self.mask_conv = nn.Conv2d(
             self.in_channels,
             out_channels=1,
             kernel_size=3,
             padding=1)
+        self.BN2 = nn.BatchNorm2d(1)
         #seblock to class channels message
         self.se_block = SEModule(in_channels=self.in_channels, reduction=16)
         
@@ -222,9 +226,10 @@ class FineClsHead(BaseModule):
         losses = dict()
         if fine_cls_score is not None:
             avg_factor = max(torch.sum(label_weights > 0).float().item(), 1.)
-            if fine_cls_score.numel() > 0:
+            arcface_score = self.loss_arcface(fine_cls_score, labels)
+            if arcface_score.numel() > 0:
                 loss_fine_cls_ = self.loss_cls(
-                    fine_cls_score,
+                    arcface_score,
                     labels,
                     label_weights,
                     avg_factor=avg_factor,
@@ -234,10 +239,10 @@ class FineClsHead(BaseModule):
                 else:
                     losses['loss_fine_cls'] = loss_fine_cls_
                 if self.custom_activation:
-                    acc_ = self.loss_cls.get_accuracy(fine_cls_score, labels)
+                    acc_ = self.loss_cls.get_accuracy(arcface_score, labels)
                     losses.update(acc_)
                 else:
-                    losses['fine_cls_acc'] = accuracy(fine_cls_score, labels)
+                    losses['fine_cls_acc'] = accuracy(arcface_score, labels)
         return losses
     
     
@@ -262,8 +267,10 @@ class FineClsHead(BaseModule):
         #mask for align feature
         mask_feat = x
         x = self.conv(x)
+        x = self.BN1(x)
         x = self.relu(x)
         mask = self.mask_conv(mask_feat)
+        mask = self.BN2(mask)
         mask = self.relu(mask)
         x = mask*x
         
