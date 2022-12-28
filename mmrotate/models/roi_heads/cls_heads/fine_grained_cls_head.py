@@ -63,7 +63,7 @@ class FineClsHead(BaseModule):
         self.fp16_enabled = False
 
         self.loss_cls = build_loss(loss_cls)
-        self.loss_arcface = build_loss(loss_arcface)
+        # self.loss_arcface = build_loss(loss_arcface)
         
         self.num_shared_fcs = num_shared_fcs
         

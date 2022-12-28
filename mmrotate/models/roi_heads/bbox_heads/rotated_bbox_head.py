@@ -434,7 +434,7 @@ class RotatedBBoxHead(BaseModule):
         max_scores, max_inds = torch.max(cls_scores, dim=1)
         det_bboxes = []
         det_labels = []
-        for i in range(5):
+        for i in range(6):
             num_inds = (max_inds==i)
             if len(torch.nonzero(num_inds==True)) == 0:
                 continue
@@ -444,8 +444,8 @@ class RotatedBBoxHead(BaseModule):
             fine_cls_score_ = fine_cls_score[num_inds]
             scores = F.softmax(fine_cls_score_, dim=-1) if fine_cls_score_ is not None else None
             scores_ = scores.new_full(scores.shape, 0)
-            if i == 5:
-                scores_[:,0:cls_inds] = scores[:,0:cls_inds]
+            if i == 5: 
+                scores_ = scores
             else:
                 scores_[:, cls_inds] = scores[:, cls_inds]
             #bbox_pred would be None in some detector 
