@@ -14,6 +14,7 @@ from mmdet.models.losses import accuracy
 from mmdet.models.utils import build_linear_layer
 
 from mmrotate.core import multiclass_nms_rotated
+from ...utils.se_layer import SEModule, DyReLU
 from ...builder import ROTATED_HEADS, build_loss
 
 
@@ -85,7 +86,9 @@ class FineClsHead(BaseModule):
             padding=1)
         self.BN2 = nn.BatchNorm2d(1)
         #seblock to class channels message
-        self.se_block = SEModule(in_channels=self.in_channels, reduction=16)
+        # self.se_block = SEModule(in_channels=self.in_channels, reduction=16)
+        # dyhead task attention block
+        self.dy_head = DyReLU(channels=self.in_channels)
         
         self.shared_fcs, last_layer_dim = self._add_fc_branch(
             self.num_shared_fcs, self.in_channels,True)
@@ -275,9 +278,9 @@ class FineClsHead(BaseModule):
         x = mask*x
         
         # senet block
-        se_weight = self.se_block(x)
-        x = se_weight*x
-
+        # x = self.se_block(x)
+        x = self.dy_head(x)
+        
         #two shared fcs for cls
         if self.num_shared_fcs > 0:
             x = x.flatten(1)
@@ -289,34 +292,7 @@ class FineClsHead(BaseModule):
         return cls_score
 
 
-class SEModule(nn.Module):
-    def __init__(self, in_channels=256, reduction=16):
-        super(SEModule, self).__init__()
-        self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.fc1 = nn.Conv2d(in_channels, in_channels//reduction, 
-                             kernel_size=1, padding=0)
-        self.relu = nn.ReLU(inplace=True)
-        self.fc2 = nn.Conv2d(in_channels//reduction, in_channels,
-                             kernel_size=1, padding=0)
-        self.sigmoid = nn.Sigmoid()
-        self.init_weights()
-    
-    def init_weights(self):
-        if hasattr(self.fc1, 'weight') and hasattr(self.fc1, 'bias'):
-            nn.init.kaiming_normal_(self.fc1.weight, mode='fan_out', nonlinearity='relu')
-            nn.init.constant_(self.fc1.bias, 0)
-        
-        if hasattr(self.fc2, 'weight') and hasattr(self.fc2, 'bias'):
-            nn.init.kaiming_normal_(self.fc2.weight, mode='fan_out', nonlinearity='relu')
-            nn.init.constant_(self.fc2.bias, 0) 
-    
-    def forward(self, x):
-        x = self.avg_pool(x)
-        x = self.fc1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
-        x = self.sigmoid(x)
-        return x
+
 
 
 
