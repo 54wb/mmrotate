@@ -75,9 +75,7 @@ model = dict(
             fc_out_channels=1024,
             roi_feat_size=7,
             num_classes=37,
-            reg_class_agnostic=True,
-            loss_arcface=dict(
-                type='ArcFaceLoss', in_features=38, out_features=38),
+            reg_class_agnostic=True, 
             loss_cls=dict(
                 type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0))),
     train_cfg=dict(

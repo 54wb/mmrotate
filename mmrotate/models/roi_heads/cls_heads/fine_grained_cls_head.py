@@ -229,10 +229,9 @@ class FineClsHead(BaseModule):
         losses = dict()
         if fine_cls_score is not None:
             avg_factor = max(torch.sum(label_weights > 0).float().item(), 1.)
-            arcface_score = self.loss_arcface(fine_cls_score, labels)
-            if arcface_score.numel() > 0:
+            if fine_cls_score.numel() > 0:
                 loss_fine_cls_ = self.loss_cls(
-                    arcface_score,
+                    fine_cls_score,
                     labels,
                     label_weights,
                     avg_factor=avg_factor,
@@ -242,10 +241,10 @@ class FineClsHead(BaseModule):
                 else:
                     losses['loss_fine_cls'] = loss_fine_cls_
                 if self.custom_activation:
-                    acc_ = self.loss_cls.get_accuracy(arcface_score, labels)
+                    acc_ = self.loss_cls.get_accuracy(fine_cls_score, labels)
                     losses.update(acc_)
                 else:
-                    losses['fine_cls_acc'] = accuracy(arcface_score, labels)
+                    losses['fine_cls_acc'] = accuracy(fine_cls_score, labels)
         return losses
     
     
