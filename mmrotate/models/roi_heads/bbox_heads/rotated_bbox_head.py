@@ -434,7 +434,7 @@ class RotatedBBoxHead(BaseModule):
         max_scores, max_inds = torch.max(cls_scores, dim=1)
         det_bboxes = []
         det_labels = []
-        for i in range(6):
+        for i in range(5):
             num_inds = (max_inds==i)
             if len(torch.nonzero(num_inds==True)) == 0:
                 continue
