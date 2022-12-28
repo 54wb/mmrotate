@@ -161,7 +161,7 @@
                 "CUDA_VISIBLE_DEVICES":"0"
             },
             "args":[
-                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_le90.py",
+                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_arcface_le90.py",
                 "--work-dir",
                 "work_dirs/debug/"
             ]
@@ -177,8 +177,8 @@
                 "CUDA_VISIBLE_DEVICES":"0"
             },
             "args":[
-                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_le90.py",
-                "work_dirs/fine_coarse_orcnn_r50_fpn_1x_fair1m_le90/latest.pth",
+                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_arcface_le90.py",
+                "work_dirs/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_arcface_le90/latest.pth",
                 "--format-only","--eval-options",
                 "submission_dir=work_dirs/debug/test"
             ]
