@@ -86,7 +86,7 @@ class FineClsHead(BaseModule):
             padding=1)
         self.BN2 = nn.BatchNorm2d(1)
         #seblock to class channels message
-        self.se_block = SEModule(in_channels=self.in_channels, reduction=16)
+        self.se_block = SEModule(in_channels=self.in_channels, reduction=32)
         # dyhead task attention block
         # self.dy_head = DyReLU(channels=self.in_channels)
         
