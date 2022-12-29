@@ -6,7 +6,7 @@ from mmcv.runner import BaseModule
 
 
 class SEModule(nn.Module):
-    def __init__(self, in_channels=256, reduction=16):
+    def __init__(self, in_channels=256, reduction=32):
         super(SEModule, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.fc1 = nn.Conv2d(in_channels, in_channels//reduction, 

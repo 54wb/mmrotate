@@ -86,9 +86,9 @@ class FineClsHead(BaseModule):
             padding=1)
         self.BN2 = nn.BatchNorm2d(1)
         #seblock to class channels message
-        # self.se_block = SEModule(in_channels=self.in_channels, reduction=16)
+        self.se_block = SEModule(in_channels=self.in_channels, reduction=16)
         # dyhead task attention block
-        self.dy_head = DyReLU(channels=self.in_channels)
+        # self.dy_head = DyReLU(channels=self.in_channels)
         
         self.shared_fcs, last_layer_dim = self._add_fc_branch(
             self.num_shared_fcs, self.in_channels,True)
@@ -277,8 +277,8 @@ class FineClsHead(BaseModule):
         x = mask*x
         
         # senet block
-        # x = self.se_block(x)
-        x = self.dy_head(x)
+        x = self.se_block(x)
+        # x = self.dy_head(x)
         
         #two shared fcs for cls
         if self.num_shared_fcs > 0:
