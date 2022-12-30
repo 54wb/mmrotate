@@ -230,12 +230,12 @@ class FineClsHead(BaseModule):
         losses = dict()
         if fine_cls_score is not None:
             avg_factor = max(torch.sum(label_weights > 0).float().item(), 1.)
-            nllloss = nn.NLLLoss(weight=label_weights, size_average=avg_factor,reduction='sum').to(fine_cls_score.device)
+            nllloss = nn.NLLLoss().to(fine_cls_score.device)
             
             if fine_cls_score.numel() > 0:
                 arcface = torch.log(self.loss_arcface(feats))
                 nll_loss = nllloss(fine_cls_score, labels)
-                arcface_loss = nll_loss(arcface, labels)
+                arcface_loss = nllloss(arcface, labels)
                 loss_fine_cls_ = nll_loss + arcface_loss
                 if isinstance(loss_fine_cls_, dict):
                     losses.update(loss_fine_cls_)
