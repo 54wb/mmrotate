@@ -64,7 +64,7 @@ class FineClsHead(BaseModule):
         self.fp16_enabled = False
 
         self.loss_cls = build_loss(loss_cls)
-        # self.loss_arcface = build_loss(loss_arcface)
+        self.loss_arcface = build_loss(loss_arcface)
         
         self.num_shared_fcs = num_shared_fcs
         
@@ -220,6 +220,7 @@ class FineClsHead(BaseModule):
     @force_fp32(apply_to=('fine_cls_score'))
     def loss(self,
              fine_cls_score,
+             feats,
              labels,
              label_weights,
              bbox_targets,
@@ -229,13 +230,13 @@ class FineClsHead(BaseModule):
         losses = dict()
         if fine_cls_score is not None:
             avg_factor = max(torch.sum(label_weights > 0).float().item(), 1.)
+            nllloss = nn.NLLLoss(weight=label_weights, size_average=avg_factor,reduction='sum').to(fine_cls_score.device)
+            
             if fine_cls_score.numel() > 0:
-                loss_fine_cls_ = self.loss_cls(
-                    fine_cls_score,
-                    labels,
-                    label_weights,
-                    avg_factor=avg_factor,
-                    reduction_override=reduction_override)
+                arcface = torch.log(self.loss_arcface(feats))
+                nll_loss = nllloss(fine_cls_score, labels)
+                arcface_loss = nll_loss(arcface, labels)
+                loss_fine_cls_ = nll_loss + arcface_loss
                 if isinstance(loss_fine_cls_, dict):
                     losses.update(loss_fine_cls_)
                 else:
@@ -288,7 +289,7 @@ class FineClsHead(BaseModule):
                 x = self.relu(fc(x))
         #fine_grained cls
         cls_score = self.fc_cls(x) if self.with_cls else None
-        return cls_score
+        return x, F.log_softmax(cls_score, dim=1)
 
 
 

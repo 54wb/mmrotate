@@ -156,7 +156,7 @@ class OrientedFineClsRoIHead(RotatedStandardRoIHead):
         cls_results = self._cls_forward(bbox_feats)
         bbox_targets = self.cls_head.get_targets(sampling_results, gt_bboxes, 
                                                   gt_labels, self.train_cfg)
-        loss_fine_cls = self.cls_head.loss(cls_results['fine_cls_score'], *bbox_targets)
+        loss_fine_cls = self.cls_head.loss(cls_results['fine_cls_score'], cls_results['feats'] , *bbox_targets)
         
         cls_results.update(loss_fine_cls=loss_fine_cls)
         return cls_results
@@ -166,9 +166,9 @@ class OrientedFineClsRoIHead(RotatedStandardRoIHead):
         """fine_cls head forward function used in both training and testing
         Args:
             bbox_feats: the feats exactored from rois"""
-        fine_cls_score = self.cls_head(bbox_feats)
+        feats, fine_cls_score = self.cls_head(bbox_feats)
         
-        cls_results = dict(fine_cls_score=fine_cls_score)
+        cls_results = dict(fine_cls_score=fine_cls_score, feats=feats)
         return cls_results
 
     def simple_test_bboxes(self,
