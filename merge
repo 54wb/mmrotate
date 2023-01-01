@@ -1,0 +1,1759 @@
+[33mcommit 70bc0dad08f4d3e9c2de2947e268bde12828c340[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;32mseblock[m[33m)[m
+Author: 54wb <1225768798@qq.com>
+Date:   Thu Dec 29 10:43:39 2022 +0800
+
+    change to seblock
+
+[33mcommit dded663f357e277dd1cb2ed9e94c4b90900e7d8d[m
+Author: 54wb <1225768798@qq.com>
+Date:   Thu Dec 29 00:59:26 2022 +0800
+
+    add dyhead
+
+[33mcommit 8712abdeab2c311fbe1a491d413d9382f7c7f140[m
+Merge: 3663582 e2d4069
+Author: 54wb <1225768798@qq.com>
+Date:   Thu Dec 29 00:48:02 2022 +0800
+
+    Merge branch 'dyhead' into main
+
+[33mcommit 36635820569b21e31f2f83bec0a21a826ea474ff[m
+Author: 54wb <1225768798@qq.com>
+Date:   Thu Dec 29 00:46:20 2022 +0800
+
+    fix fine_coarse inference
+
+[33mcommit 9d441b998808ff65de058c9f12d63be8379b678c[m
+Author: 54wb <1225768798@qq.com>
+Date:   Wed Dec 28 20:19:15 2022 +0800
+
+    inference without bg
+
+[33mcommit 675634fa2e92e1b230529916857031c0262ea790[m
+Author: 54wb <1225768798@qq.com>
+Date:   Wed Dec 28 19:57:21 2022 +0800
+
+    fine_coarse_arcface config
+
+[33mcommit f8587317f6672447434fbadb79a42ba04bd65246[m
+Author: 54wb <1225768798@qq.com>
+Date:   Wed Dec 28 19:56:49 2022 +0800
+
+    fix debug
+
+[33mcommit e2d406931984bb5aae9fa17d7ebf6828c078fcc9[m
+Author: 54wb <1225768798@qq.com>
+Date:   Wed Dec 28 11:37:46 2022 +0800
+
+    add se_layer for seblock and dyReLU
+
+[33mcommit edaec72d04913f3c737c45b4086e887c5e38d964[m
+Author: 54wb <1225768798@qq.com>
+Date:   Tue Dec 27 22:35:36 2022 +0800
+
+    add arcface config
+
+[33mcommit 7a4d76355848b03c55442a001474e845ea8dd47c[m
+Author: 54wb <1225768798@qq.com>
+Date:   Tue Dec 27 22:33:54 2022 +0800
+
+    add BN layer after conv
+
+[33mcommit 565e8b542c17d5c8b9f62d91147b1710c1908997[m
+Author: 54wb <1225768798@qq.com>
+Date:   Tue Dec 27 22:33:19 2022 +0800
+
+    add arcface_loss
+
+[33mcommit 9956775de0884864b30d0a88e584edffc3d18130[m
+Author: 54wb <1225768798@qq.com>
+Date:   Tue Dec 27 22:33:00 2022 +0800
+
+    add arcface loss
+
+[33mcommit d0364bb2857c8fbdb70764f6fc0a55aa00813d43[m
+Author: 54wb <1225768798@qq.com>
+Date:   Mon Dec 26 23:00:42 2022 +0800
+
+    fix the args of self.bbox_head.get_bbox function
+
+[33mcommit 7c447562147f96a21e931a134eec2d1d21b2b50a[m
+Author: 54wb <1225768798@qq.com>
+Date:   Mon Dec 26 22:59:38 2022 +0800
+
+    add the coarse bbox_head
+
+[33mcommit 7a3d7204ca61dda9e7aecae45dec3ad77c47a1f3[m
+Author: 54wb <1225768798@qq.com>
+Date:   Mon Dec 26 22:57:41 2022 +0800
+
+    add the adamw optimizer
+
+[33mcommit a693accbff03b3e8b43c655caf4270e972df36b1[m
+Author: 54wb <1225768798@qq.com>
+Date:   Sun Dec 25 12:24:04 2022 +0800
+
+    test baseline using adamw optimizer
+
+[33mcommit 1909aef0a601c129c1b125a9f6e4a7ce5634a6f4[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: 54wb <1225768798@qq.com>
+Date:   Sat Dec 24 19:13:29 2022 +0800
+
+    add the fine_orcnn
+
+[33mcommit c62f148fcc2c8253218e67f2277cb8770bcd7df0[m[33m ([m[1;31mmmrotate/main[m[33m)[m
+Merge: d1d273b 36de5f6
+Author: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+Date:   Wed Jul 6 20:44:31 2022 +0800
+
+    Release of v0.3.2
+    
+    Release of v0.3.2
+
+[33mcommit 36de5f666f8fa850c448cb0287239beb60937695[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Jul 6 20:43:48 2022 +0800
+
+    Bump version to 0.3.2 (#397)
+
+[33mcommit d205890769892ea6cb24c6a7359b38614958276b[m
+Merge: feb6697 d1d273b
+Author: ZwwWayne <wayne.zw@outlook.com>
+Date:   Wed Jul 6 20:24:20 2022 +0800
+
+    Merge branch 'main' of github.com:open-mmlab/mmrotate into dev
+
+[33mcommit feb6697959976a5fdcc49528f4529a03ce4ce9a7[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Jul 6 19:09:02 2022 +0800
+
+    update checkpoint and eval interval (#347)
+
+[33mcommit a7c4aae8f7c33888cd868159043f822eb9714e66[m
+Author: KAIWANG <whu-wk@whu.edu.cn>
+Date:   Wed Jul 6 19:08:48 2022 +0800
+
+    [Feature] Support RMosaic (#344)
+    
+    * add mosaic
+    
+    * add docstring for rmosaic
+    
+    * correct formatting problems
+    
+    * correct formatting problems
+    
+    * correct formatting problems
+    
+    * correct formatting problems
+    
+    * fix pre-commit problems
+    
+    * fix pre-commit problems
+    
+    * add version docstring
+    
+    * add version docstring
+    
+    * Delete settings.json
+
+[33mcommit d1d273b185b5906d1ca01c017b3d7b4e6a28e9fe[m
+Author: sunshine.lwt <sunshine_lwt@126.com>
+Date:   Wed Jul 6 19:08:10 2022 +0800
+
+    [Algorithm] Support  Oriented Reppoints (CVPR'22) (#286)
+    
+    * add orientedreppoints
+    
+    * update oriented reppoints
+    
+    * update oriented reppoints by adding docstrings
+    
+    * update by pre-commiting to fix the lint errors
+    
+    * update by pre-commiting to fix the lint errors
+    
+    * update oriented reppoints
+    
+    * update oriented reppoints
+    
+    * update readme of oriented reppoints
+    
+    * update model_zoo of oriented reppoints
+    
+    * update zh_cn model_zoo of oriented reppoints
+    
+    * update zh_cn model_zoo of oriented reppoints
+    
+    * update zh_cn model_zoo of oriented reppoints
+    
+    * update oriented reppoints
+
+[33mcommit 01439d1f2eab87e19f39cb2cb2a5b5c4afa3f6b6[m
+Author: sltlls <50494500+sltlls@users.noreply.github.com>
+Date:   Wed Jun 22 20:34:28 2022 +0800
+
+    Fix inference issue with large image (#368)
+
+[33mcommit 29f79916f9c3afaa3d5edd431461eeab6b75f175[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Wed Jun 22 20:32:00 2022 +0800
+
+    [Feature] Support ConvNeXt (CVPR'22) (#343)
+
+[33mcommit 7992d8b69275128d5a8f003ac3d652705c270b3f[m
+Author: KAIWANG <372760284@qq.com>
+Date:   Wed Jun 22 20:30:17 2022 +0800
+
+    fix bugs in PolyRandomRotate (#366)
+
+[33mcommit 707b0ae40e0cd80725b1edcc90080c0f4717ec9c[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Jun 22 16:44:23 2022 +0800
+
+    [Enhancement] Test mim in CI (#374)
+    
+    * Create test_mim.yml
+    
+    * Update model-index.yml
+    
+    * Update model-index.yml
+    
+    * fix
+
+[33mcommit e22c8dfa3c309aa68ff18a5a03316f69c6eb2880[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Wed Jun 15 20:59:16 2022 +0800
+
+    [Fix]: fix max_coordinate in multiclass_nms_rotated (#346)
+
+[33mcommit a114d98332331abe1566aacdd727dcd5287b37a6[m
+Author: JinYuannn <88826210+JinYuannn@users.noreply.github.com>
+Date:   Wed Jun 15 20:56:49 2022 +0800
+
+    fixed a spelling error (#354)
+
+[33mcommit 22bbb497c82b1748c03c19a878ced180b6c7298f[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Jun 15 20:54:56 2022 +0800
+
+    [Fix] Fix mdformat version to support python3.6 & Add mim to extras_require in setup.py (#359)
+
+[33mcommit ad479518f44901c0cef1abc6c56315775b1c6c4c[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Jun 10 15:51:51 2022 +0800
+
+    Update readme and install.md (#342)
+    
+    * update
+    
+    * update
+    
+    * update
+    
+    * fix
+    
+    * 使用 Colaboratory 创建
+    
+    * update
+    
+    * fix lint
+
+[33mcommit 6eb7a277ed62f64952587c9e41498f8e3c0cfe63[m
+Merge: 0edd257 d6ff82d
+Author: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+Date:   Mon Jun 6 22:02:10 2022 +0800
+
+    Release v0.3.1
+
+[33mcommit d6ff82d9251e12fcf24e994eb0dea0f9ef74782c[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Jun 6 21:14:12 2022 +0800
+
+    Bump version to v0.3.1 (#332)
+
+[33mcommit ad61f2fd2aa2dc483a4e8fd393ec9c6dbce06c47[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Mon Jun 6 21:13:19 2022 +0800
+
+    [Algorithm] Support Rotated FCOS (ICCV'2019) (#223)
+    
+    * Support Rotated FCOS
+    
+    * update fcos kld result
+    
+    * add polyiou
+    
+    * add model zoo
+    
+    * rename poly_iou to rotated_iou
+    
+    * add test
+    
+    * remove train_cfg, add import check for mmcv version
+    
+    * add readme
+    
+    * add readme
+    
+    * update dota result
+    
+    * Revert "update dota result"
+    
+    This reverts commit dca93323868ba7a5d379dc0e629f6a8ac0d55995.
+    
+    * publish fcos models
+    
+    * fix lint
+    
+    * add metafile.yml
+
+[33mcommit 5f7d50d27ca044ffa9e99f1aa4e74c559a66b608[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Jun 6 21:06:18 2022 +0800
+
+    Fix typo about split gap of ms (#272)
+    
+    * fix typo
+    
+    * fix lint
+
+[33mcommit ff6d407d508d99cf9d3188dfa3de7fd66e8b8c50[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Mon Jun 6 19:24:28 2022 +0800
+
+    Add MultiImageMixDataset in build_dataset (#331)
+
+[33mcommit 834e8f9eacfe2c22875c44f341a2339a5483470a[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Mon Jun 6 19:22:29 2022 +0800
+
+    Fix img_prefix in HRSC dataset (#329)
+
+[33mcommit b624834d68c772f05cfadc26d9213331d246c91d[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Jun 6 19:16:44 2022 +0800
+
+    Fix path error in cfg (#328)
+
+[33mcommit 2f32bf9b38a08641e52f0433d766fd4285b1cd72[m
+Author: Hakjin Lee <nijkah@gmail.com>
+Date:   Mon Jun 6 20:12:48 2022 +0900
+
+    [Feature] Support RandomCrop for rotated boxes (#322)
+    
+    * Add RRandomCrop
+    
+    * Update docstring
+    
+    * fix docs
+    
+    * add test code
+    
+    * fix test code
+    
+    * fix typos
+    
+    * fix test code
+    
+    * fix docstring
+
+[33mcommit 04258b00d17bd33fd8911e5223e1fdc2b528d39b[m
+Author: Hakjin Lee <nijkah@gmail.com>
+Date:   Mon Jun 6 15:07:18 2022 +0900
+
+    [Feature] Allow turn-off filter_empty_gt (#323)
+    
+    * add filter empty gt condition
+    
+    * add unit test
+
+[33mcommit 9d472737e510f2612df18b2ab40ef8a2fab9dcb7[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Mon Jun 6 14:05:58 2022 +0800
+
+     [Fix] Fix windows CI (#324)
+
+[33mcommit 2b04a8097a119370619db67156ff12fcc3f62de9[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed May 25 19:53:13 2022 +0800
+
+    Update conf.py (#308)
+
+[33mcommit 3055b56ff326ff4ca36f42725ef39d7d024015b3[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed May 18 19:25:52 2022 +0800
+
+    [Docs] Replace markdownlint with mdformat for avoiding installing ruby (#306)
+
+[33mcommit 7721d6f879d57488e20798239c07d85e30872664[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed May 18 19:12:20 2022 +0800
+
+    Update conf.py (#305)
+
+[33mcommit 8b6a806f59cd83657aa1635984c02ba40dc6a48e[m
+Author: remi-or <83456801+remi-or@users.noreply.github.com>
+Date:   Wed May 18 07:11:24 2022 -0400
+
+    Poly discrete rotate (#281)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22) (#184)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22)
+    
+    * Update citation
+    
+    * [Fix] 'RoIAlignRotated' object has no attribute 'output_size' (#213)
+    
+    * Update rotate_single_level_roi_extractor.py
+    
+    * Update rotate_single_level_roi_extractor.py
+    
+    * [Fix]  Modify the use of rotated anchor inside flags (#197)
+    
+    * rotated RPN bug
+    
+    * Modify the use of rotated anchor inside flags
+    
+    * Added PolyDiscreteRotate transform and fixed typos
+    
+    * Added unit test for PolyDiscreteRotate
+    
+    * Fixed linting of pipelines __init__
+    
+    * Fused the 2 transforms
+    
+    * [Enhance] Support mask in merge_results and huge_image_demo.py. (#280)
+    
+    * Support masks mergeing
+    
+    * Update error report
+    
+    * Added mode argument
+    
+    * Fixed redundancy and added value unit test
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+    Co-authored-by: yangxue <yangxue0827@126.com>
+    Co-authored-by: Yue Zhou <592267829@qq.com>
+    Co-authored-by: GamblerZSY <86358394+GamblerZSY@users.noreply.github.com>
+    Co-authored-by: jbwang1997 <jbwang1997@gmail.com>
+
+[33mcommit e077a9a9365c1d42efea284844e55bfb1d2bdc1c[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Wed May 11 22:50:40 2022 +0800
+
+    [Enhancement]: Update Chinese documentation about torchserve (#287)
+
+[33mcommit 0edd2578743559b35bab23b45058211b85ecb82c[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Wed May 11 22:49:39 2022 +0800
+
+    [Enhance] Support mask in merge_results and huge_image_demo.py. (#280)
+    
+    * Support masks mergeing
+    
+    * Update error report
+
+[33mcommit bf613300f7d1b639cfa32f76b1be82d95c03339c[m
+Author: Hakjin Lee <nijkah@gmail.com>
+Date:   Wed May 11 23:48:47 2022 +0900
+
+    fix typo in readme (#284)
+
+[33mcommit d80310aa2c4a67c877c62432cddee246d2a4dbcd[m
+Merge: 9bf16a2 1828f38
+Author: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+Date:   Sat Apr 30 15:13:28 2022 +0800
+
+    Release v0.3.0
+
+[33mcommit 1828f38369e4740c0374a75b360918283b04e48c[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Sat Apr 30 15:13:08 2022 +0800
+
+    bump mmdet min version to 2.22.0 (#270)
+    
+    * update mmdet
+    
+    * fix
+    
+    * fix
+    
+    * Update changelog.md
+    
+    * Update changelog.md
+
+[33mcommit 9815050be788839767cc7c9ac26299119da0bf97[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Apr 29 23:52:39 2022 +0800
+
+     Open Bump min mmdet to 2.22.0 (#267)
+
+[33mcommit ae612ec0702fb6b57f6c483080121d2fe200b3a4[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Apr 29 23:52:09 2022 +0800
+
+    [Fix] Fix GPG key error in CI and docker (#269)
+
+[33mcommit c0c286e74e0450e6afa6c2c13eeea75673ef1378[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Apr 29 19:58:30 2022 +0800
+
+    Bump version to v0.3.0 (#260)
+    
+    * update
+    
+    * fix
+    
+    * Update changelog.md
+    
+    * Update changelog.md
+
+[33mcommit 3f6d677a16ad6181ab1180d948fe937db6c3bc9d[m
+Author: q.yao <streetyao@live.com>
+Date:   Fri Apr 29 19:57:13 2022 +0800
+
+    Fix dota tools document (#264)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22) (#184)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22)
+    
+    * Update citation
+    
+    * Fix dota tools document
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+    Co-authored-by: yangxue <yangxue0827@126.com>
+
+[33mcommit 0c28088e5137cc9a12f26beb40fd8187f6cb2139[m
+Author: Hakjin Lee <nijkah@gmail.com>
+Date:   Fri Apr 29 18:54:52 2022 +0900
+
+    [Docs] Fix typo in Config File and Model Zoo (#199)
+    
+    * Fix data_root
+    
+    * Fix refered config file in Model Zoo
+    
+    * Update other docs
+    
+    * Update other docs2
+
+[33mcommit 9bf16a2e6de92a946644d40b73312f2215eab06f[m
+Author: GamblerZSY <86358394+GamblerZSY@users.noreply.github.com>
+Date:   Fri Apr 29 17:54:01 2022 +0800
+
+    [Fix]  Modify the use of rotated anchor inside flags (#197)
+    
+    * rotated RPN bug
+    
+    * Modify the use of rotated anchor inside flags
+
+[33mcommit 3254f9d3463f0e9e5c9bd995b91a78f817b2fadf[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Fri Apr 29 17:46:39 2022 +0800
+
+    [Reimplementation] Update performance of ReDet on HRSC2016 (#203)
+    
+    * [Reimplementation] Update performance of ReDet on HRSC2016
+    
+    * delete the duplicate part
+    
+    * Update redet_re50_refpn_3x_hrsc_le90.py
+    
+    * update model and log
+    
+    * Update metafile.yml
+    
+    * update download version
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit 762ea89d2162cd5764127a60563d5a8df31d8857[m
+Author: Hakjin Lee <nijkah@gmail.com>
+Date:   Fri Apr 29 18:46:11 2022 +0900
+
+    [Fix] Fix test code for datasets (#222)
+    
+    * [Fix] Fix test code for datasets
+    
+    * Revert dataset unit test
+    
+    * Recover unit test for SARDataset
+    
+    * Move nms_rotated in DOTA
+    
+    * test skipif cuda not available
+    
+    * Remove skipif in test_rotate
+    
+    * recover nms_rotated in dota
+    
+    * Remove skipif in test_dota
+    
+    * Update github workflow
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit 2391337835b5db4cd7081dae4f477213eabbd037[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Fri Apr 29 17:44:47 2022 +0800
+
+    [Fix] Unified RBox definition (#234)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22) (#184)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22)
+    
+    * Update citation
+    
+    * [Fix] Unified Angle Definition
+    
+    * update zh_ch docs
+    
+    * Update intro.md
+    
+    * fix typo in config
+    
+    * add hrsc dataset link
+    
+    * fix bug of kfiou+roi trans+swin-tiny
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit 434911ca4b75ac0dfb06259b50c2ec833b32af1d[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Fri Apr 29 17:44:08 2022 +0800
+
+    [Fix] Fix bug in rotated_reppoints_head (#246)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22) (#184)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22)
+    
+    * Update citation
+    
+    * [Fix] 'RoIAlignRotated' object has no attribute 'output_size' (#213)
+    
+    * Update rotate_single_level_roi_extractor.py
+    
+    * Update rotate_single_level_roi_extractor.py
+    
+    * [Fix] Fix bug in rotated_reppoints_head
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+    Co-authored-by: Yue Zhou <592267829@qq.com>
+
+[33mcommit 6d7b9418dec6b8ccbef4cede44d4dd14965db95d[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Apr 29 17:43:46 2022 +0800
+
+    update arxiv (#263)
+
+[33mcommit e555fa22eeba57643700c0fa9fa99423a78f5549[m
+Author: Hakjin Lee <nijkah@gmail.com>
+Date:   Thu Apr 28 00:09:43 2022 +0900
+
+    [Feature] support torchserve (#160)
+    
+    * support torchserve
+    
+    * fix typo in docstring
+    
+    * fix typos and version issues
+    
+    * add documentation for serving
+    
+    * Lint & Fix typos
+    
+    * Add useful tools in README
+    
+    * Fix invalid json in README
+    
+    * Add docstring
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit 0d7bbe58bfa9f291eb4bc2abd0da7c6e966a4f7a[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Wed Apr 20 19:56:25 2022 +0800
+
+    [Algorithm] Support Rotated ATSS-OBB (CVPR'20) (#179)
+    
+    * [Algorithm] Support Rotated ATSS-OBB (CVPR'20)
+    
+    * update model zoo
+    
+    * remove redundant code
+    
+    * update docstring
+    
+    * Update __init__.py
+    
+    * Update links
+    
+    * update model links
+    
+    * update download version
+    
+    * update performance of r3det_atss
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit b7e6955690ade54731f84916ac1f6c05dae76598[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Wed Apr 20 19:50:58 2022 +0800
+
+    [Algorithm] Update Stable KLD (NeurIPS'21) (#183)
+    
+    * [Algorithm] Update Stable KLD (NeurIPS'21)
+    
+    * Update metafile.yml
+    
+    * Update performance on HRSC2016
+    
+    * Update inf. time
+    
+    * update model and log
+    
+    * update metafile
+    
+    * update download version
+
+[33mcommit 382c06d993113de4f931aa99b983860871f1de7a[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Apr 20 19:50:05 2022 +0800
+
+    [Fix] 'RoIAlignRotated' object has no attribute 'output_size' (#213)
+    
+    * Update rotate_single_level_roi_extractor.py
+    
+    * Update rotate_single_level_roi_extractor.py
+
+[33mcommit 211d7a90f41c23a6858e792e7439a393e5aa43e1[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Wed Apr 20 19:38:16 2022 +0800
+
+    [Feature] Add dataloader arguments in config (#215)
+    
+    * Update loader arguments
+    
+    * Follow mmdet
+    
+    * Update
+    
+    * Update
+    
+    * Update
+    
+    * Update
+
+[33mcommit df125d7121d9d4074d1ccfdec60fd65ce58ff7d8[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Wed Apr 13 20:28:37 2022 +0800
+
+    [Docs] Update the introduction of SASM (AAAI'22) (#184)
+    
+    * [Docs] Update the introduction of SASM (AAAI'22)
+    
+    * Update citation
+
+[33mcommit 3a2dfbf618a06386bee82bbd6f2c51447fa9c409[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Wed Apr 13 20:28:17 2022 +0800
+
+    [Enhance] Refactor `imshow_det_rbboxes` (#187)
+    
+    * refactor show result
+    
+    * add test_palette
+    
+    * add api visualization
+    
+    * 使用 Colaboratory 创建
+    
+    * fix lint
+    
+    * 使用 Colaboratory 创建
+    
+    * fix lint
+    
+    * fix name
+    add palette to huge demo
+    
+    * add sar, hrsc, hrsc_classwise PALETTE
+    
+    * fix typo
+
+[33mcommit 28ee073e5efc7e1a3d06880425d674d95d6700d7[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Apr 13 20:27:44 2022 +0800
+
+    [Fix] Bump max mmcv version to 1.6.0 (#195)
+    
+    * Update __init__.py
+    
+    * Update __init__.py
+    
+    * Revert "Update __init__.py"
+    
+    This reverts commit ba335ea003ce882e06800786a76b40e05a5b9baf.
+    
+    * fix bug
+    
+    * update
+    
+    * Revert "update"
+    
+    This reverts commit 7d0b2945c765f05dc40e34b9e634448e3ebb2926.
+    
+    * fix
+    
+    * Update __init__.py
+    
+    * Update install.md
+
+[33mcommit 36606ed116d83700b13e2381eb4973d8fef960f9[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Wed Apr 13 17:51:07 2022 +0800
+
+    [Feature] Support get flops tool (#176)
+    
+    * add get flops
+    
+    * add doc
+    
+    * add doc
+    
+    * add cn doc
+    
+    * fix
+    
+    * fix
+
+[33mcommit 44bee7e37fa053971fca50a454777e0feb2de047[m
+Author: Hakjin Lee <nijkah@gmail.com>
+Date:   Wed Apr 13 18:49:30 2022 +0900
+
+    [Fix] fix bug in eval_rbbox_map when labels_ignore is None (#209)
+
+[33mcommit 9fa9eba7e93f128a353c1d3ddee46ea47e85b88d[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Wed Apr 13 17:49:04 2022 +0800
+
+    [Fix] Fix nan issue of GWD (#206)
+    
+    * [Fix] Fix nan issue of GWD
+    
+    * fix sqrt bug
+    
+    * fix doc check failure
+    
+    * fix sqrt bug
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit b78bab24dc35657fe4e349d8c033e15848101eef[m
+Merge: c5bf348 44b0aec
+Author: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+Date:   Fri Apr 1 22:47:37 2022 +0800
+
+    Release v0.2.0
+
+[33mcommit 44b0aecb05453dae9cf6b94ce03bce0c97d3b8de[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Fri Apr 1 22:44:59 2022 +0800
+
+    Bump version to v0.2.0 (#170)
+    
+    * Bump vision to v0.2.0
+    
+    * Update vision in changelog
+    
+    * Update changelog
+    
+    * Update changelog.md
+    
+    * Update changelog.md
+    
+    * Update pr 175
+
+[33mcommit d11241fe3ec3972ee4f992008103847fe87d8c15[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Apr 1 22:42:04 2022 +0800
+
+    Fix bug in docstring. (#137)
+    
+    * Update rotated_anchor_head.py
+    
+    * fix lint
+    
+    * update docstring
+    
+    * Update
+    
+    * update docstring
+    
+    * fix link in docs.
+    
+    * update
+    
+    * add install in reademe
+    
+    * Revert "add install in reademe"
+    
+    This reverts commit e0a0f09923e48490f289a11373cbf7d9d59a718f.
+    
+    * Update .gitignore
+    
+    * fix docstring error
+    
+    * fix readthedocs api bug
+    
+    * fix hyperlink
+    
+    * Update smooth_focal_loss.py
+    
+    * fix lint
+    
+    * fix bugs
+    
+    * update return in docstring
+    
+    * fix bugs
+    
+    * update api.rst
+    
+    * update assigner
+    
+    * fix bugs
+    
+    * update
+    
+    * update
+    
+    * fix bugs in return
+    
+    * add download link in demo
+    
+    * fix typos
+
+[33mcommit 27ad53861455aef82e6bf4d73b052a7ff6daa8b7[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Apr 1 16:03:26 2022 +0800
+
+    fix bug (#175)
+
+[33mcommit a362cd3617f155c3e73f4702e83b8d5270d090b7[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Mar 30 22:44:24 2022 +0800
+
+    Update from-scratch install script in install.md (#166)
+    
+    * update readme
+    
+    * Update .gitignore
+    
+    * update
+    
+    * update
+    
+    * Update .gitignore
+    
+    * delete torchvision version
+    
+    * update
+    
+    * update
+
+[33mcommit 96de045156934f741484c95faedb4e18985c1821[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Wed Mar 30 19:38:04 2022 +0800
+
+    [Fix] Improve the arguments of img_split.py (#168)
+    
+    * Normalize img_split.py
+    
+    * Update README.md
+    
+    * Update train.py diff_seed
+
+[33mcommit 92d750590cbd973dd2dba852a4c6891838566964[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Tue Mar 29 14:28:06 2022 +0800
+
+    [Algorithm] Support Circular Smooth Label (CSL, ECCV'20) (#153)
+    
+    * [Algorithm] Support CSL
+    
+    * rm inplace operation in gwd
+    
+    * fix typo in redet config
+    
+    * update comments, delete useless code, and fix bugs
+    
+    * fix typo
+    
+    * add docstring
+    
+    * fix docstring typo
+    
+    * Organize comments
+    
+    * Add description to anchor generator
+    
+    * Delete useless code
+    
+    * Add more comments
+    
+    * fix urls
+    
+    * speed up csl head
+    
+    * update docstring
+    
+    * fix cls-pulse bug
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit 4961f0467673d730653da395118c131401ae85f3[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Mar 28 09:48:22 2022 +0800
+
+    Add  .dev_scripts/gather_models.py (#162)
+    
+    * Create gather_models.py
+    
+    * update
+    
+    * Update gather_models.py
+
+[33mcommit e85805a877ead7149329b09e914032a7ecabcf56[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Mar 28 09:45:47 2022 +0800
+
+    Fix rbbox_overlaps (#155)
+    
+    * Update rotate_iou2d_calculator.py
+    
+    * refactor in-place operator
+    
+    * fix bug
+    
+    Co-authored-by: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+
+[33mcommit f5da6f2e107d0c7474ab46d187eaff36db1dded4[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Thu Mar 17 22:34:14 2022 +0800
+
+     [Feature] Add different seeds to different ranks (#102)
+
+[33mcommit 47055d5b1b3d09e2cb67182a8442d0125622c8af[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Mar 16 22:06:05 2022 +0800
+
+    [Feature] Add multi machine dist_train (#143)
+
+[33mcommit 30698917eea1a7d63dd05348e7de9f4cfdebe0a8[m
+Author: MingJian.L <45811724+matrixgame2018@users.noreply.github.com>
+Date:   Wed Mar 16 10:19:59 2022 +0800
+
+    [Docs] Update customize_dataset.md (#65)
+    
+    * Update customize_dataset.md
+    
+    Translate the Doc to chinese
+    
+    * Update customize_dataset.md
+    
+    * Update customize_dataset.md
+    
+    * Delete customize_dataset.md
+    
+    * Create customize_dataset.md
+    
+    * Update customize_dataset.md
+    
+    * Update customize_dataset.md
+    
+    * Update customize_dataset.md
+    
+    * Update customize_dataset.md
+    
+    Fix somthing
+    
+    * Update customize_dataset.md
+    
+    Fix something mistakes
+
+[33mcommit e5c2a82dcbae702e69283497a924ea3ca9a35a11[m
+Author: CANOE <liwentao0705@outlook.com>
+Date:   Wed Mar 16 10:11:54 2022 +0800
+
+    Add browse_dataset for visualization (#98)
+    
+    * Add browse_dataset for visualization
+    
+    * Add docstring and fix the lint.
+    
+    * Put the assertion of the if branch
+
+[33mcommit c5bf348562fd84cc17906c2cf370d1a49fcd3035[m
+Merge: 7c9a592 2a06273
+Author: Wenwei Zhang <40779233+ZwwWayne@users.noreply.github.com>
+Date:   Mon Mar 14 13:38:52 2022 +0800
+
+    Bump version to v0.1.1
+    
+    Bump version to v0.1.1
+
+[33mcommit 2a0627353176b73a27a20903d504ca54be47ccaf[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Mar 14 13:12:31 2022 +0800
+
+    Bump versions to v0.1.1 (#101)
+    
+    * Bump versions to v0.1.1
+    
+    * Update changelog.md
+    
+    * update
+    
+    * Update release date
+    
+    * fix format.
+    
+    * update changelog in readme
+
+[33mcommit 19724355fd6b19aa68a6406c903e5dab42ba811c[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Mon Mar 14 10:05:51 2022 +0800
+
+    [Feature] Add HRSC Dataset (#96)
+    
+    * Add HRSCDataset
+    
+    * Add HRSCDataset
+    
+    * Add doc
+    
+    * fix test path
+    
+    * fix num_class
+    
+    * add retinanet hrsc result
+    
+    * fix typo
+    add s2anet config
+    
+    * fix
+    add s2anet result
+    
+    * fix indentation
+
+[33mcommit 3237e4aade7dcaf7292a6f78852788d1b0b0efe4[m
+Author: KAIWANG <whu-wk@whu.edu.cn>
+Date:   Mon Mar 14 10:05:12 2022 +0800
+
+    [Feature] add codes for inference speed statistics (#86)
+    
+    * add codes for inference speed statistics
+    
+    * fix errors in linting
+    
+    * fix errors in linting
+    
+    * fix errors in linting
+    
+    * fix errors in linting
+    
+    * update descriptions for functions
+    
+    * fix errors in linting
+
+[33mcommit a6f77582e70d0c91e4ff6f1ba8e9322cdb439ee6[m
+Author: lalalagogogo <44855506+lalalagogogochong@users.noreply.github.com>
+Date:   Mon Mar 14 09:57:09 2022 +0800
+
+    [Fix] Bug for SASM durning training. (#105)
+    
+    * 1.assign函数参数顺序错误，overlaps参数位置错误（这个问题不影响正常训练，是我调试的时候发现的，你们可以确认一下，这个有没影响）2.all_overlaps_rotate_list之前大小固定为4，应该按照一个batchsize大小进行设置，修改之后不会报tensor维度错误，可以正常训练
+    
+    * assign参数仅需修改init阶段顺序即可
+
+[33mcommit 3ebcee0329738216435a122da908d57a96ad77d3[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Mon Mar 14 09:56:35 2022 +0800
+
+    [Fix] Add URL of Swin pretrained model. (#111)
+    
+    * Upgrade URL
+    
+    * Update URL
+
+[33mcommit 5a0867d5a3abbdbbda33d36f1b47ef0aa6334855[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Mar 14 09:56:17 2022 +0800
+
+    [Features] Support fp16 models. (#72)
+    
+    * Update rotate_single_level_roi_extractor.py
+    
+    * add fp16 configs
+    
+    * Update Inf Time (fps) by benchmark.py
+    
+    * fix lint
+    
+    * Delete run.sh
+
+[33mcommit 077ae5d2e226418e30f7ce32d1be90a2917f8087[m
+Author: thearcanist <32617884+akmalulkhairin@users.noreply.github.com>
+Date:   Wed Mar 9 23:28:47 2022 +0800
+
+    Add confusion matrix tools analysis (#93)
+
+[33mcommit 8a05ea0de813a2d62073747ebf96045975d3ef02[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Wed Mar 9 23:27:22 2022 +0800
+
+    Move `eval_map` to mmrotate.evaluation. (#73)
+    
+    * Move `eval_map` to mmrotate.evaluation.
+    
+    * change name, fix description.
+    
+    * remove recall
+
+[33mcommit 47b451d3768d6c1bcd8d782aca713f289ef2c9e0[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Mar 9 23:25:48 2022 +0800
+
+    [Fix]: Update link (#75)
+
+[33mcommit 65c6cb4673c0ed98a5b3e9c3369a41a2479a233c[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Mar 9 23:25:02 2022 +0800
+
+    Fix rbbox_overlaps abnormal when the box is too small. (#61)
+    
+    * add unit test
+    
+    * fix bug
+    
+    * fix lint
+    
+    * Update rotate_iou2d_calculator.py
+    
+    * Update rotate_iou2d_calculator.py
+
+[33mcommit 4b3e121d34bf15f16ba24ce0bee152b861542166[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Mar 9 23:24:18 2022 +0800
+
+    Update image.py (#81)
+
+[33mcommit cd8ffb242f714a01549b8ee977aed6e53aa9ccb0[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Tue Mar 8 14:29:07 2022 +0800
+
+    Add Colab Tutorial (#66)
+    
+    * Create MMRotate_Tutorial.ipynb
+    
+    * 使用 Colaboratory 创建
+    
+    * 使用 Colaboratory 创建
+    
+    * 使用 Colaboratory 创建
+    
+    * 使用 Colaboratory 创建
+    
+    * 使用 Colaboratory 创建
+    
+    * update readme
+    
+    * fix lint
+    
+    * update
+    
+    * 使用 Colaboratory 创建
+    
+    * 使用 Colaboratory 创建
+    
+    * 使用 Colaboratory 创建
+    
+    * 使用 Colaboratory 创建
+    
+    * fix lint
+    
+    * Update inference_demo.ipynb
+    
+    * Update MMRotate_Tutorial.ipynb
+    
+    * rename
+    
+    * 使用 Colaboratory 创建
+    
+    * fix lint
+    
+    * Update MMRotate_Tutorial.ipynb
+
+[33mcommit 5fff506b2198706ac096fdca790f31aa367fa5a8[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Tue Mar 8 14:23:27 2022 +0800
+
+    Update README in configs. (#42)
+    
+    * Update readme in configs
+    
+    * Reorganizing OpenMMLab projects in readme
+    
+    * enlarge images appropriately.
+    
+    * add description about obb and hbb
+    
+    * fix typo
+    
+    * Update README
+
+[33mcommit dd40984589b95fceb9c691f8d6b61595bc5827e4[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Thu Mar 3 09:45:49 2022 +0800
+
+    update Projects in OpenMMLab (#58)
+
+[33mcommit eeb272078bd963ba2e925814cc0eeba17db1d77f[m
+Author: DC <anhcda@vision.is.tohoku.ac.jp>
+Date:   Thu Mar 3 01:05:16 2022 +0900
+
+    [Fix]: temporarily fix out_size issue in RoIAlignRotated  (#51)
+
+[33mcommit 583ab82792ec09d56f298f139f4a840fa9ac287a[m
+Author: DC <anhcda@vision.is.tohoku.ac.jp>
+Date:   Thu Mar 3 01:01:50 2022 +0900
+
+    [Fix]: fix deadlock in multi-process evaluation (#52)
+    
+    * debug for issue #45
+    
+    * push for lint
+
+[33mcommit 15f3d467d9bcc268de7e971a76fc1af1ef485a98[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Wed Mar 2 23:59:52 2022 +0800
+
+    Upgrate dota_demo (#57)
+
+[33mcommit 2f72c43e53d183f9991056d20f74aed92dc4181b[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Mar 2 16:21:45 2022 +0800
+
+    Update build.yml (#49)
+
+[33mcommit 126ba40401a8a922ebf101c3e27cff968e56af6c[m
+Author: Range King <RangeKingHZ@gmail.com>
+Date:   Wed Mar 2 12:06:58 2022 +0800
+
+    [Docs] Update docs/zh_cn/tutorials/customize_config.md (#23)
+    
+    * Update get_started.md
+    
+    1. translate `get_started.md` into Chinese
+    2. fix some typos in `en/get_started.md`
+    3. fix a broken link in `en/get_started.md`
+    
+    * Update get_started.md
+    
+    add missing blank space
+    
+    * Update customize_config.md
+    
+    1. translate `customize_config.md` into Chinese
+    2. fix some grammatical errors in `en/tutorials/customize_config.md`
+    
+    * Update customize_config.md
+    
+    fix some typos
+    
+    * Revert "Update get_started.md"
+    
+    This reverts commit 4b2895dd272c24f940151033f52dcbe86a3e754e.
+    
+    * Revert "Update get_started.md"
+    
+    This reverts commit a1f14f148b37bcc3eb694ebd74845d90dac4bd45.
+    
+    * Update customize_config.md
+    
+    * Update customize_config.md
+    
+    * Update customize_config.md
+    
+    Update code comments
+
+[33mcommit db10f8a5ef5b79b57c13d7531842163e966e3279[m
+Author: LF <55144027+liufeinuaa@users.noreply.github.com>
+Date:   Tue Mar 1 17:14:19 2022 +0800
+
+    [Docs] Add Chinese version of model_zoo.md (#28)
+    
+    * add chinese version of model_zoo.md
+    
+    * trans batch size
+    
+    * fix MS
+
+[33mcommit 89f12a2ebc5371d0b2155685310431af05825264[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Tue Mar 1 15:44:20 2022 +0800
+
+    [Docs] Update the faq.md about e2cnn. (#36)
+
+[33mcommit 485cad987a26d07c0183975724e424a900dc9567[m
+Author: Yanyi Liu <wolfsonliu@163.com>
+Date:   Tue Mar 1 15:40:45 2022 +0800
+
+    Add init_cfg for dense heads. (#37)
+    
+    * switch to original pycocotools on Windows
+    
+    * change name
+    
+    * add init_cfg for dense _heads
+    
+    * remove opencv
+
+[33mcommit 575cf4ad4d4b334edcd8a0523e45fb6f24e5390b[m
+Merge: 7c9a592 7cd6ebc
+Author: yangxue <yangxue0827@126.com>
+Date:   Tue Mar 1 15:27:50 2022 +0800
+
+    Merge pull request #34 from jbwang1997/huge_img_infer
+    
+    [Feature] Add huge image inference demo.
+
+[33mcommit 7cd6ebcae51bc743eaeb2858026d59d99b928b99[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Mon Feb 28 16:37:37 2022 +0800
+
+    Check docs
+
+[33mcommit 7c9a592fdda583f3b6c0d200c14020daca18317b[m
+Author: BrotherHappy <70844235+BrotherHappy@users.noreply.github.com>
+Date:   Sat Feb 26 15:02:06 2022 +0800
+
+    translation faq finished (#33)
+    
+    * translation faq finished
+    
+    * translate_err_fixed
+    
+    * translate_err_fixed
+    
+    * translate_err_fixed
+    
+    * translate_err_fixed
+    
+    * translate_err_fixed
+    
+    * translate_err_fixed
+    
+    * translate_err_fixed
+    
+    * translate_err_fixed
+    
+    * punctuation err fixed
+    
+    * Update faq.md
+    
+    * Update faq.md
+    
+    * linted
+    
+    * fix end of files
+    
+    * 解决了一些符号问题
+    
+    * en fixed
+    
+    * en fixed
+    
+    * 0 fixed
+    
+    * 0 fixed
+    
+    * check it word by word
+    
+    * check docs
+    
+    * check docs
+    
+    Co-authored-by: hx <hx@hxdeMacBook-Pro.local>
+    Co-authored-by: yangxue <yangxue0827@126.com>
+    Co-authored-by: jbwang1997 <jbwang1997@gmail.com>
+
+[33mcommit 559b467c0d60386817d7d827fa3e158f192868b5[m
+Author: Lue Fan <1060056270@qq.com>
+Date:   Sat Feb 26 15:00:14 2022 +0800
+
+    [Docs] Add Chinese version of customize_models.md (#27)
+    
+    * [Docs] Add Chinese version of customize_models.md
+    
+    * [Docs] Add Chinese version of customize_models.md
+    
+    * Update customize_models.md
+    
+    * Update customize_models.md
+    
+    * linting passed
+    
+    * fixed punctuation
+    
+    Co-authored-by: yangxue <yangxue0827@126.com>
+
+[33mcommit ecfdd3903b2d749cb7a9626871525caa03035ba3[m
+Author: np-csu <nipan1988@gmail.com>
+Date:   Sat Feb 26 14:59:31 2022 +0800
+
+    Update ss_trainval.json (#21)
+    
+    set save_dir to a better place
+
+[33mcommit 4e39a452a64d00c1300ecca2b926234e48e5ef85[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Fri Feb 25 17:18:14 2022 +0800
+
+    inference huge image
+
+[33mcommit 4722bd62c33dbc0d12be173ade4f5685729ab536[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Thu Feb 24 11:03:21 2022 +0800
+
+    Update build.yml to add windows CI (#31)
+
+[33mcommit 98e36b30b7f387ac8b6ea0411d1534b7f08066ec[m
+Author: Sheffield <49406546+SheffieldCao@users.noreply.github.com>
+Date:   Wed Feb 23 23:11:54 2022 +0800
+
+    Update docs/zh_cn/tutorials/customize_runtime.md (#22)
+    
+    * Update docs/zh_cn/tutorials/customize_runtime.md
+    
+    * [Fix] Fix typos in zh_cn docs customize_runtime.md
+    
+    * [Fix] Fix typos in cn&en docs customize_runtime.md
+    
+    * [Fix] Fix typos in zh_cn docs customize_runtime.md
+    
+    * Fix lint
+    
+    Co-authored-by: jbwang1997 <jbwang1997@gmail.com>
+
+[33mcommit 5cb4b5169c6c97dc2fb33d8202aaad2374bb4664[m
+Author: np-csu <nipan1988@gmail.com>
+Date:   Wed Feb 23 23:11:05 2022 +0800
+
+    Update README.md (#20)
+    
+    fix an typo
+
+[33mcommit c18677761394e258b462924b7229deebb17425c4[m
+Author: tripleMu <92794867+q3394101@users.noreply.github.com>
+Date:   Wed Feb 23 23:10:03 2022 +0800
+
+    Update get_started.md (#16)
+    
+    * Update get_started.md
+    
+    line 125 fix "ang" -> "and"
+    
+    * translate get_started.md
+    
+    * fix not translated
+    
+    * translate get_started.md
+    
+    * del unused file
+    
+    * fix get_started.md
+    
+    * fix get_started.md
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * translate get_started.md
+    
+    * Update get_started.md
+    
+    line 125 fix "ang" -> "and"
+    
+    * fix not translated
+    
+    * translate get_started.md
+    
+    * del unused file
+    
+    * fix get_started.md
+    
+    * fix get_started.md
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * fix some problem
+    
+    * fix en and zh_ch get_started.md
+
+[33mcommit ede3833bb638f630892b5f73ad49cbf3d8ee07b1[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Wed Feb 23 23:09:08 2022 +0800
+
+    [Fix] fix eval bug when single processing. (#14)
+    
+    * fix eval bug when single processing.
+    
+    * Update dota.py
+    
+    * Update docstring
+
+[33mcommit 7b4c51b4d2cb03147339468886f8b890da401354[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Wed Feb 23 23:08:44 2022 +0800
+
+    Add checking copyright pre-commit hook (#30)
+
+[33mcommit 6825e4bec1c39890b60b1a51ef8edf49ab6fb66a[m
+Author: LF <55144027+liufeinuaa@users.noreply.github.com>
+Date:   Mon Feb 21 14:12:08 2022 +0800
+
+    Use mmcv-full rather than mmcv in requirements #6 (#17)
+
+[33mcommit 9daa5d0b612626526693e00f229e7305afb94e30[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Mon Feb 21 11:27:05 2022 +0800
+
+    [Fix] fix bug in docs/get_started.md (#11)
+    
+    * fix bug in docs
+    
+    * fix typos
+    
+    * Add multi-gpu command
+
+[33mcommit 1d682cfd8010c8f22bfb5d725296a673ca9edd33[m
+Author: jbwang1997 <jbwang1997@gmail.com>
+Date:   Mon Feb 21 11:26:53 2022 +0800
+
+    fix visualization bugs (#12)
+
+[33mcommit 6519a3654e17b707c15d4aa2c5db1257587ea4c0[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Feb 18 15:23:33 2022 +0800
+
+    [Fix] Fix typos and bugs. (#3)
+    
+    * [Fix] Fix typos and bugs.
+    
+    * [Fix] Fix typos.
+
+[33mcommit 6c6bd4805028fd893b829e5d7ad1fe132ed54572[m
+Author: erenzhou <592267829@qq.com>
+Date:   Fri Feb 18 12:17:15 2022 +0800
+
+    [Fix] Fix typos in README and Upate model_zoo.md.
+
+[33mcommit f3f9e1a07c5856a9349e22799e1aef15ef1cba6c[m
+Author: erenzhou <592267829@qq.com>
+Date:   Fri Feb 18 09:08:15 2022 +0800
+
+    [Fix] Fix lint error in README.
+
+[33mcommit d7785b1ff4e206f25f0de0732f560a606df97c90[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Feb 18 09:01:17 2022 +0800
+
+    Update README_zh-CN.md
+
+[33mcommit dcd09ce0e48e6b18ead19c5e70fe3bb69e898adb[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Feb 18 08:47:57 2022 +0800
+
+    Update README.md
+
+[33mcommit 4a6260a03a5a9240a201015a76c24f7527e39888[m
+Author: erenzhou <592267829@qq.com>
+Date:   Fri Feb 18 08:42:11 2022 +0800
+
+    Update README.md
+
+[33mcommit e731063727454737cb5d696191a1a6f85d28ac57[m
+Author: Yue Zhou <592267829@qq.com>
+Date:   Fri Feb 18 08:38:38 2022 +0800
+
+    Update README.md
+
+[33mcommit 742e6843aad7ab5bf7bc35d7e4411764d0848b09[m
+Author: erenzhou <592267829@qq.com>
+Date:   Fri Feb 18 07:54:43 2022 +0800
+
+    [Fix] Update mmcv version.
+
+[33mcommit 9616da1f06ddbfd2de36fdf40b4faab9834dbdb4[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Thu Feb 17 22:33:35 2022 +0800
+
+    [Fix] Fix typos in README
+
+[33mcommit 1dcd47832302b68f4bb6c6e719d47aac674d0975[m
+Author: erenzhou <592267829@qq.com>
+Date:   Thu Feb 17 20:06:48 2022 +0800
+
+    [Fix] Fix typos in README.
+
+[33mcommit 058d4a2df0bf424b7aafe1e69a20a01c97cbb5e3[m
+Author: erenzhou <592267829@qq.com>
+Date:   Thu Feb 17 20:01:37 2022 +0800
+
+    [Fix] Fix links in README.
+
+[33mcommit 5660262983ff55cb454e8481de7e6d9a1a8b4b70[m
+Author: zhanggefan <lizaozhouke@gmail.com>
+Date:   Thu Feb 17 17:41:24 2022 +0800
+
+    Upload the final part of the code by zgf
+
+[33mcommit 0724acc9a03577d19eaf5524385ad23315da739a[m
+Author: erenzhou <592267829@qq.com>
+Date:   Thu Feb 17 17:28:03 2022 +0800
+
+    Upload the second part of the code by zy
+
+[33mcommit 2267bc5d5fcbe378a86a3a71ab6879f92f16e445[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Thu Feb 17 17:17:03 2022 +0800
+
+    Upload the first part of the code by yx
+
+[33mcommit 20006192c9a0fe1b4685eb41711ba12d76299f2c[m
+Author: yangxue <yangxue0827@126.com>
+Date:   Thu Feb 17 17:11:49 2022 +0800
+
+    first commit
