@@ -220,7 +220,6 @@ class FineClsHead(BaseModule):
     @force_fp32(apply_to=('fine_cls_score'))
     def loss(self,
              fine_cls_score,
-             feats,
              labels,
              label_weights,
              bbox_targets,
@@ -233,8 +232,9 @@ class FineClsHead(BaseModule):
             nllloss = nn.NLLLoss().to(fine_cls_score.device)
             
             if fine_cls_score.numel() > 0:
-                arcface = torch.log(self.loss_arcface(feats))
-                nll_loss = nllloss(fine_cls_score, labels)
+                arcface = torch.log(self.loss_arcface(fine_cls_score))
+                _fine_cls_score = F.log_softmax(fine_cls_score, dim=1)
+                nll_loss = nllloss(_fine_cls_score, labels)
                 arcface_loss = nllloss(arcface, labels)
                 loss_fine_cls_ = nll_loss + arcface_loss
                 if isinstance(loss_fine_cls_, dict):
@@ -289,7 +289,7 @@ class FineClsHead(BaseModule):
                 x = self.relu(fc(x))
         #fine_grained cls
         cls_score = self.fc_cls(x) if self.with_cls else None
-        return x, F.log_softmax(cls_score, dim=1)
+        return cls_score
 
 
 
