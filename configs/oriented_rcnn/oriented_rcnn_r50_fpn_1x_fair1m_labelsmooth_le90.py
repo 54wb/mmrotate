@@ -68,7 +68,7 @@ model = dict(
             reg_class_agnostic=True,
             loss_cls=dict(
                 type='LabelSmoothLoss',
-                num_classes=37, 
+                num_classes=38, 
                 label_smooth_val=0.1, 
                 loss_weight=1.0),
             loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0))),
