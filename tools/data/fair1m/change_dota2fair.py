@@ -1,6 +1,7 @@
 import os
 import shutil
 import argparse
+from tqdm import tqdm
 # import xml.etree.ElementTree as ET
 from xml.dom.minidom import Document
 
@@ -254,7 +255,7 @@ dota_list = os.listdir(dota_path)
 dict_content = {}
 
 
-for cls_txt in dota_list:
+for cls_txt in tqdm(dota_list,desc="Reading dota results:"):
     cls = cls_txt.replace('.txt', '')
     a = cls.split('1_')
     cls = a[1]
@@ -272,7 +273,7 @@ for cls_txt in dota_list:
         else:
             dict_content[res].append(cls + ' ' + l[1]+ ' ' + l[2]+ ' ' + l[3]+ ' ' + l[4]+ ' '+ l[5]+ ' ' + l[6]+ ' '+ l[7]+ ' ' + l[8]+ ' '+ l[9])
 
-print(len(set(img_list)))
+print("the number of images can be detected is {}".format(len(set(img_list))))
 ori_img_list = os.listdir(ori_img_path)
 for im in ori_img_list:
     im = im.replace('.tif', '')
@@ -284,7 +285,7 @@ for im in ori_img_list:
         f.close()
         # print(im)
 
-for img_name in dict_content.keys():
+for img_name in tqdm(dict_content.keys(),desc='Writing for fair1m results:'):
 
 
     doc = write_xml(img_name,dict_content[img_name])
@@ -293,7 +294,6 @@ for img_name in dict_content.keys():
     f = open(tempfile, "w")
     doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
     f.close()
-
 
 
 
