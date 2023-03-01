@@ -151,6 +151,22 @@
             ]
         },
         {
+            "name": "Python: collect_obj_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/analysis_tools/object_infos.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "/disk0/dataset/TianzhiBk/ship/train/labels",
+                "/disk0/dataset/TianzhiBk/ship/train"
+            ]
+        },
+
+        {
             "name": "Python: fine_grinted_debug",
             "type": "python",
             "request": "launch",
