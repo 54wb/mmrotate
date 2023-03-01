@@ -25,9 +25,12 @@ def collect_areas(ann_dir):
                 if len(l)<8:
                     continue
                 else:
-                    poly = list(map(float,l[1:9]))
+                    if ann_dir.split("/")[-3] == 'plane':
+                        poly = list(map(float,l[1:9]))
+                    else:
+                        poly = list(map(float,l[:8]))
                     polys.append(poly)
-    print("all dataset has {} objects".format(len(polys)))
+    print("this dataset has {} objects".format(len(polys)))
     polys = torch.tensor(polys)             
     obbs = poly2obb_le90(polys)
     areas = obbs[:,2] * obbs[:,3]
@@ -39,10 +42,17 @@ def main():
     ann_dir = args.ann_dir
     output_dir = args.output_dir
     areas,index = collect_areas(ann_dir)
-    plt.hist(areas,bins=20)
-    plt.title('areas analyze')
+    num = len(areas)
+    if output_dir.split('/')[-1] == 'dior-r-ship' or output_dir.split('/')[-2] == 'ssdd':
+        areas = areas[areas<6000] 
+    elif output_dir.split('/')[-2] == 'ship':
+        areas = areas[areas<35000]
+    else:
+        areas = areas[areas<10000]
+    plt.hist(areas,bins=10)
+    plt.title('areas analyze_{}'.format(len(areas)))
     plt.xlabel('areas')
-    plt.ylabel('rate')
-    areas
+    plt.ylabel('num')
+    plt.savefig(osp.join(output_dir,('areas_{}.jpg').format(num)))
 if __name__ == '__main__':
     main()
