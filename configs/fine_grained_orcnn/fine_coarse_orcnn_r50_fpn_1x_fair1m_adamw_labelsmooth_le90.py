@@ -77,7 +77,7 @@ model = dict(
             num_classes=37,
             reg_class_agnostic=True,
             loss_cls=dict(
-                type='LabelSmoothLoss', label_smooth_val=0.1, mode='original'))),
+                type='LabelSmoothLoss', num_classes = 38, label_smooth_val=0.01))),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -152,4 +152,16 @@ data = dict(
     val=dict(version=angle_version),
     test=dict(version=angle_version))
 
-optimizer = dict(lr=0.005)
+optimizer = dict(
+    _delete_=True,
+    type='AdamW',
+    lr=0.0001,
+    betas=(0.9, 0.999),
+    weight_decay=0.05,
+    paramwise_cfg=dict(
+        custom_keys={
+            'absolute_pos_embed': dict(decay_mult=0.),
+            'relative_position_bias_table': dict(decay_mult=0.),
+            'norm': dict(decay_mult=0.)
+        }))
+lr_config = dict(warmup_iters=1000, step=[8,11])
