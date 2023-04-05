@@ -1,6 +1,7 @@
+import argparse
+from pathlib import Path
 import os
 import shutil
-import argparse
 from tqdm import tqdm
 # import xml.etree.ElementTree as ET
 from xml.dom.minidom import Document
@@ -241,45 +242,48 @@ def parse_args():
 
 args = parse_args()
 
-ori_img_path = '/disk0/lwb/datasets/Fair1m1_0/test/images/'#存放fair1m的test图像的路径
+ori_img_path = Path('/disk0/lwb/datasets/Fair1m1_0/test/images/')#存放fair1m的test图像的路径
 
-dota_path =  args.dota_dir #dota格式的结果文件路径
-write_path = args.fair_dir #预期存放fair1m格式文件的路径
-write_path = os.path.join(write_path, 'test/')
+dota_path =  Path(args.dota_dir) #dota格式的结果文件路径
+write_path = Path(args.fair_dir) #预期存放fair1m格式文件的路径
+write_path = write_path/"test/"
 
-if not os.path.exists(write_path):
-    os.makedirs(write_path)
+if os.path.exists(write_path):
+    print("文件夹已存在,是否覆盖:[y/n]")
+    if input().lower() == 'y':
+        shutil.rmtree(write_path)
+    else:
+        exit(0)
 
-dota_list = os.listdir(dota_path)
+os.makedirs(write_path)
+dota_list = dota_path.glob("*.txt") 
 
 dict_content = {}
 
 
 for cls_txt in tqdm(dota_list,desc="Reading dota results:"):
-    cls = cls_txt.replace('.txt', '')
-    a = cls.split('1_')
-    cls = a[1]
-    with open(dota_path+cls_txt, 'r') as f:
+    cls = cls_txt.stem.split("1_")[1]
+    with open(cls_txt, 'r') as f:
         lines = f.readlines()
     for line in lines:
-        l = line.split()
+        l = line.strip().split()
         res = l[0][1:].lstrip('0')
         if res == '':
             res = '0'
         img_list.append(res)
         if res not in dict_content.keys():
-            dict_content[res] = []
-            dict_content[res].append(cls + ' ' + l[1]+ ' ' + l[2]+ ' ' + l[3]+ ' ' + l[4]+ ' '+ l[5]+ ' ' + l[6]+ ' '+ l[7]+ ' ' + l[8]+ ' '+ l[9])
+            dict_content[res] = [cls + ' ' + " ".join(l[1:])]
+
         else:
-            dict_content[res].append(cls + ' ' + l[1]+ ' ' + l[2]+ ' ' + l[3]+ ' ' + l[4]+ ' '+ l[5]+ ' ' + l[6]+ ' '+ l[7]+ ' ' + l[8]+ ' '+ l[9])
+            dict_content[res].append(cls + ' ' + " ".join(l[1:]))
 
 print("the number of images can be detected is {}".format(len(set(img_list))))
-ori_img_list = os.listdir(ori_img_path)
+ori_img_list = ori_img_path.glob("*.tif")
 for im in ori_img_list:
-    im = im.replace('.tif', '')
+    im = im.stem
     if im not in set(img_list):
         doc = write_xml_noobject(im)
-        tempfile = write_path + im + ".xml"
+        tempfile = write_path / (im + ".xml")
         f = open(tempfile, "w")
         doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
         f.close()
@@ -290,7 +294,7 @@ for img_name in tqdm(dict_content.keys(),desc='Writing for fair1m results:'):
 
     doc = write_xml(img_name,dict_content[img_name])
 
-    tempfile = write_path + img_name + ".xml"
+    tempfile = write_path / (img_name + ".xml")
     f = open(tempfile, "w")
     doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
     f.close()
