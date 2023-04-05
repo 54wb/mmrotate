@@ -37,9 +37,9 @@ model = dict(
             target_means=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             target_stds=[1.0, 1.0, 1.0, 1.0, 0.5, 0.5]),
         loss_cls=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=4.0),
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
         loss_bbox=dict(
-            type='SmoothL1Loss', beta=0.1111111111111111, loss_weight=4.0)),
+            type='SmoothL1Loss', beta=0.1111111111111111, loss_weight=1.0)),
     roi_head=dict(
         type='OrientedFineClsRoIHead',
         bbox_roi_extractor=dict(
@@ -67,8 +67,8 @@ model = dict(
                 target_stds=(0.1, 0.1, 0.2, 0.2, 0.1)),
             reg_class_agnostic=True,
             loss_cls=dict(
-                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=2.0),
-            loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=2.0)),
+                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
+            loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0)),
         cls_head=dict(
             type='FineClsHead',
             in_channels=256,
@@ -77,7 +77,7 @@ model = dict(
             num_classes=37,
             reg_class_agnostic=True,
             loss_cls=dict(
-                type='LabelSmoothLoss', num_classes = 38, label_smooth_val=0.01))),
+                type='LabelSmoothLoss', num_classes = 38, label_smooth_val=0.002))),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
