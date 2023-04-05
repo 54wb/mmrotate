@@ -165,7 +165,38 @@
                 "/disk0/dataset/TianzhiBk/ship/train"
             ]
         },
+        {
+            "name": "Python: dota2fair_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/data/fair1m/change_dota2fair.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "work_dirs/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_labelsmooth_le90/test/",
+                "work_dirs/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_labelsmooth_le90/submit"
+            ]
 
+        },
+        {
+            "name": "Python: cls_score_debug",
+            "type": "python",
+            "request": "launch",
+            "program": "tools/analysis_tools/cls_score_analysis.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env":{
+                "CUDA_VISIBLE_DEVICES":"0"
+            },
+            "args":[
+                "work_dirs/orcnn_r50_fpn_1x_fair1m_le90/test",
+                "0.05"
+            ]
+
+        },
         {
             "name": "Python: fine_grinted_debug",
             "type": "python",
