@@ -10,7 +10,7 @@ from ..builder import ROTATED_LOSSES
 
 @ROTATED_LOSSES.register_module()
 class ArcFaceLoss(nn.Module):
-    def __init__(self, in_features, out_features, s=10.0, m=0.03):
+    def __init__(self, in_features, out_features, s=10.0, m=0.03, easy_margin=False):
         super(ArcFaceLoss, self).__init__()
         self.in_features = in_features
         self.out_features = out_features
@@ -20,7 +20,7 @@ class ArcFaceLoss(nn.Module):
         nn.init.xavier_uniform_(self.weight)
 
     
-    def forward(self, input):
+    def forward(self, input, label, weight=None):
         cosine = F.linear(F.normalize(input), F.normalize(self.weight))
         theta = torch.acos(cosine)
         # off = theta.clone()
