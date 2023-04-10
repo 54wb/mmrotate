@@ -77,7 +77,7 @@ model = dict(
             num_classes=37,
             reg_class_agnostic=True,
             loss_cls=dict(
-                type='LabelSmoothLoss', num_classes = 38, label_smooth_val=0.002))),
+                type='LabelSmoothLoss', num_classes = 38, label_smooth_val=0.005))),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
