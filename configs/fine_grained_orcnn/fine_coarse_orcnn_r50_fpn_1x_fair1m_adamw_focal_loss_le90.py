@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/datasets/fair1m.py', '../_base_/schedules/schedule_1x.py',
     '../_base_/default_runtime.py'
 ]
-
+custom_imports=dict(imports='mmdet.models.losses.focal_loss', allow_failed_imports=False)
 angle_version = 'le90'
 model = dict(
     type='OrientedRCNN',
@@ -77,7 +77,7 @@ model = dict(
             num_classes=37,
             reg_class_agnostic=True,
             loss_cls=dict(
-                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0))),
+                type='FocalLoss', use_sigmoid=True, gamma=2.0, alpha=0.25, loss_weight=1.0))),
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
