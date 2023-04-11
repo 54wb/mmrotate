@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from ..builder import ROTATED_LOSSES
 from .cross_entrypy_loss import CrossEntropyloss
@@ -97,10 +98,12 @@ class ClsSmoothLoss(nn.Module):
             label = convert_to_one_hot(label.view(-1, 1), self.num_classes)
         return label.float()
 
-    def original_smooth_label(self, one_hot_like_label):
+    def original_smooth_label(self, cls_score, one_hot_like_label):
         assert self.num_classes > 0
-        smooth_label = one_hot_like_label * (1 - self._eps)
-        smooth_label += self._eps / self.num_classes
+        cls_score = F.softmax(cls_score)
+        smooth_eps = (-0.0015 * torch.log(cls_score) + 0.0035).clamp(min=0.0036, max=0.008)
+        smooth_label = one_hot_like_label * (1 - smooth_eps)
+        smooth_label += smooth_eps / self.num_classes
         return smooth_label
 
     def multilabel_smooth_label(self, one_hot_like_label):
@@ -147,7 +150,7 @@ class ClsSmoothLoss(nn.Module):
             f'to be same shape, but got output.shape: {cls_score.shape} ' \
             f'and target.shape: {one_hot_like_label.shape}'
 
-        smoothed_label = self.smooth_label(one_hot_like_label)
+        smoothed_label = self.smooth_label(cls_score, one_hot_like_label)
         return self.ce.forward(
             cls_score,
             smoothed_label,
