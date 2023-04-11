@@ -208,7 +208,7 @@
                 "CUDA_VISIBLE_DEVICES":"0"
             },
             "args":[
-                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_focal_loss_le90.py",
+                "configs/fine_grained_orcnn/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_clssmooth_le90.py",
                 "--work-dir",
                 "work_dirs/debug/"
             ]
