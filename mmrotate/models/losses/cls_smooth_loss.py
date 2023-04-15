@@ -110,7 +110,7 @@ class ClsSmoothLoss(nn.Module):
         gt_score = sigmod_cls_score[range(N), label]
         _gap = gt_score - max_score[:, 0]
         sample = torch.where(_gap!=0, _gap, gt_score - max_score[:, 1])
-        sample[sample==-1] = 0.9999
+        sample[sample==-1] = -0.9999
         sample_weight = torch.where(sample<0, -0.1 * torch.log(sample+1) + 1, weight)
         return sample_weight
 
