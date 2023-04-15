@@ -25,7 +25,7 @@ class ClsSmoothLoss(nn.Module):
         label_smooth_val (float): The degree of label smoothing.
         num_classes (int, optional): Number of classes. Defaults to None.
         mode (str): Refers to notes, Options are 'original', 'classy_vision',
-            'multi_label'. Defaults to 'original'
+            . Defaults to 'original'
         reduction (str): The method used to reduce the loss.
             Options are "none", "mean" and "sum". Defaults to 'mean'.
         loss_weight (float):  Weight of the loss. Defaults to 1.0.
@@ -75,7 +75,7 @@ class ClsSmoothLoss(nn.Module):
             f'but gets {mode}.'
         self.reduction = reduction
 
-        accept_mode = {'original', 'classy_vision', 'multi_label'}
+        accept_mode = {'original', 'classy_vision'}
         assert mode in accept_mode, \
             f'LabelSmoothLoss supports mode {accept_mode}, but gets {mode}.'
         self.mode = mode
@@ -83,9 +83,6 @@ class ClsSmoothLoss(nn.Module):
         self._eps = label_smooth_val
         if mode == 'classy_vision':
             self._eps = label_smooth_val / (1 + label_smooth_val)
-        if mode == 'multi_label':
-            self.ce = CrossEntropyloss(use_sigmoid=True)
-            self.smooth_label = self.multilabel_smooth_label
         else:
             self.ce = CrossEntropyloss(use_soft=True)
             self.smooth_label = self.original_smooth_label
@@ -98,19 +95,24 @@ class ClsSmoothLoss(nn.Module):
             label = convert_to_one_hot(label.view(-1, 1), self.num_classes)
         return label.float()
 
-    def original_smooth_label(self, cls_score, one_hot_like_label):
+    def original_smooth_label(self, one_hot_like_label):
         assert self.num_classes > 0
-        cls_score = F.softmax(cls_score)
-        smooth_eps = (-0.0015 * torch.log(cls_score) + 0.0035).clamp(min=0.0036, max=0.008)
-        smooth_label = one_hot_like_label * (1 - smooth_eps)
-        smooth_label += smooth_eps / self.num_classes
+        smooth_label = one_hot_like_label * (1 - self._eps)
+        smooth_label += self._eps / self.num_classes
         return smooth_label
 
-    def multilabel_smooth_label(self, one_hot_like_label):
-        assert self.num_classes > 0
-        smooth_label = torch.full_like(one_hot_like_label, self._eps)
-        smooth_label.masked_fill_(one_hot_like_label > 0, 1 - self._eps)
-        return smooth_label
+    def sample_weight(self, cls_score, label):
+        assert len(cls_score) == len(label)
+        N = len(label)
+        weight = torch.ones(N, device=label.device)
+        sigmod_cls_score = F.softmax(cls_score, dim=-1)
+        max_score, max_inds = torch.topk(sigmod_cls_score, k=2, dim=1, largest=True)
+        gt_score = sigmod_cls_score[range(N), label]
+        _gap = gt_score - max_score[:, 0]
+        sample = torch.where(_gap!=0, _gap, gt_score - max_score[:, 1])
+        sample[sample==-1] = 0.9999
+        sample_weight = torch.where(sample<0, -0.1 * torch.log(sample+1) + 1, weight)
+        return sample_weight
 
     def forward(self,
                 cls_score,
@@ -150,7 +152,8 @@ class ClsSmoothLoss(nn.Module):
             f'to be same shape, but got output.shape: {cls_score.shape} ' \
             f'and target.shape: {one_hot_like_label.shape}'
 
-        smoothed_label = self.smooth_label(cls_score, one_hot_like_label)
+        smoothed_label = self.smooth_label(one_hot_like_label) 
+        weight = self.sample_weight(cls_score, label) 
         return self.ce.forward(
             cls_score,
             smoothed_label,
