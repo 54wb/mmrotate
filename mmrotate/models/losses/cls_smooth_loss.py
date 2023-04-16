@@ -55,6 +55,8 @@ class ClsSmoothLoss(nn.Module):
 
     def __init__(self,
                  label_smooth_val,
+                 hard_val,
+                 easy_val=None,
                  num_classes=None,
                  mode='original',
                  reduction='mean',
@@ -62,7 +64,7 @@ class ClsSmoothLoss(nn.Module):
         super().__init__()
         self.num_classes = num_classes
         self.loss_weight = loss_weight
-
+        self.hard_val = hard_val
         assert (isinstance(label_smooth_val, float)
                 and 0 <= label_smooth_val < 1), \
             f'LabelSmoothLoss accepts a float label_smooth_val ' \
@@ -110,8 +112,8 @@ class ClsSmoothLoss(nn.Module):
         gt_score = sigmod_cls_score[range(N), label]
         _gap = gt_score - max_score[:, 0]
         sample = torch.where(_gap!=0, _gap, gt_score - max_score[:, 1])
-        sample[sample==-1] = -0.9999
-        sample_weight = torch.where(sample<0, -0.1 * torch.log(sample+1) + 1, weight)
+        sample[sample<=-1] = -0.9999
+        sample_weight = torch.where(sample<0, -1 * self.hard_val * torch.log(sample+1) + 1, weight)
         return sample_weight
 
     def forward(self,
