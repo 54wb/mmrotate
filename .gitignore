@@ -119,6 +119,6 @@ dmypy.json
 .idea
 *work_dirs*
 tmp
-
+data/
 # custom
 mmrotate/.mim
