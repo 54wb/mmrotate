@@ -18,7 +18,6 @@ lib/
 lib64/
 parts/
 sdist/
-data/
 var/
 wheels/
 *.egg-info/
@@ -120,6 +119,7 @@ dmypy.json
 .idea
 *work_dirs*
 tmp
+data/
 
 # custom
 mmrotate/.mim
