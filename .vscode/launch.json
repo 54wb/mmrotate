@@ -177,7 +177,7 @@
             },
             "args":[
                 "work_dirs/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_labelsmooth_le90/test/",
-                "work_dirs/fine_coarse_orcnn_r50_fpn_1x_fair1m_adamw_labelsmooth_le90/submit"
+                "work_dirs/submit"
             ]
 
         },
