@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import copy
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -13,8 +12,7 @@ from mmdet.core import multi_apply
 from mmdet.models.losses import accuracy
 from mmdet.models.utils import build_linear_layer
 
-from mmrotate.core import multiclass_nms_rotated
-from ...utils.se_layer import SEModule, DyReLU
+from ...utils.se_layer import SEModule
 from ...builder import ROTATED_HEADS, build_loss
 
 
@@ -42,7 +40,6 @@ class FineClsHead(BaseModule):
                  num_classes=37, 
                  reg_class_agnostic=False,
                  cls_predictor_cfg=dict(type='Linear'),
-                 loss_arcface=None,
                  loss_cls=None,
                  num_shared_fcs=2,
                  init_cfg=None,
@@ -64,8 +61,6 @@ class FineClsHead(BaseModule):
         self.fp16_enabled = False
 
         self.loss_cls = build_loss(loss_cls)
-        if loss_arcface is not None:
-            self.loss_arcface = build_loss(loss_arcface)
         
         self.num_shared_fcs = num_shared_fcs
         
@@ -125,9 +120,7 @@ class FineClsHead(BaseModule):
                     override=[
                         dict(name='shared_fcs'),
                         dict(name='fc_cls')
-                    ])]
-            
-    
+                    ])] 
 
 
     @property
@@ -247,36 +240,6 @@ class FineClsHead(BaseModule):
                 else:
                     losses['fine_cls_acc'] = accuracy(fine_cls_score, labels)
         return losses
-    # @force_fp32(apply_to=('fine_cls_score'))
-    # def loss(self,
-    #          fine_cls_score,
-    #          labels,
-    #          label_weights,
-    #          bbox_targets,
-    #          bbox_weights,
-    #          reduction_override=None):
-    #     """Loss function"""
-    #     losses = dict()
-    #     if fine_cls_score is not None:
-    #         avg_factor = max(torch.sum(label_weights > 0).float().item(), 1.)
-    #         nllloss = nn.NLLLoss().to(fine_cls_score.device)
-            
-    #         if fine_cls_score.numel() > 0:
-    #             arcface = torch.log(self.loss_arcface(fine_cls_score))
-    #             _fine_cls_score = F.log_softmax(fine_cls_score, dim=1)
-    #             nll_loss = nllloss(_fine_cls_score, labels)
-    #             arcface_loss = nllloss(arcface, labels)
-    #             loss_fine_cls_ = nll_loss + arcface_loss
-    #             if isinstance(loss_fine_cls_, dict):
-    #                 losses.update(loss_fine_cls_)
-    #             else:
-    #                 losses['loss_fine_cls'] = loss_fine_cls_
-    #             if self.custom_activation:
-    #                 acc_ = self.loss_cls.get_accuracy(fine_cls_score, labels)
-    #                 losses.update(acc_)
-    #             else:
-    #                 losses['fine_cls_acc'] = accuracy(fine_cls_score, labels)
-    #     return losses
     
     
     def get_fine_labels(self, fine_cls_score, cfg=None):
