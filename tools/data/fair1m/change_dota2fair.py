@@ -1,10 +1,13 @@
 import argparse
 from pathlib import Path
+from glob import glob
 import os
 import shutil
 from tqdm import tqdm
+from tqdm.contrib.concurrent import process_map
 # import xml.etree.ElementTree as ET
 from xml.dom.minidom import Document
+from multiprocessing import Pool
 
 img_list = []
 
@@ -240,6 +243,20 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def _write_empty_xml(im):
+    doc = write_xml_noobject(im)
+    tempfile = write_path / (im + ".xml")
+    f = open(tempfile, "w")
+    with open(tempfile, 'w') as f: 
+        doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
+
+def _write_detect_xml(img_name):
+    doc = write_xml(img_name,dict_content[img_name])
+    tempfile = write_path / (img_name + ".xml")
+    f = open(tempfile, "w")
+    with open(tempfile, 'w') as f:
+        doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
+
 args = parse_args()
 
 ori_img_path = Path('/disk0/lwb/datasets/Fair1m1_0/test/images/')#存放fair1m的test图像的路径
@@ -261,7 +278,7 @@ dota_list = dota_path.glob("*.txt")
 dict_content = {}
 
 
-for cls_txt in tqdm(dota_list,desc="Reading dota results:"):
+for cls_txt in tqdm(dota_list, desc="Reading dota results:"):
     cls = cls_txt.stem.split("1_")[1]
     with open(cls_txt, 'r') as f:
         lines = f.readlines()
@@ -276,29 +293,17 @@ for cls_txt in tqdm(dota_list,desc="Reading dota results:"):
 
         else:
             dict_content[res].append(cls + ' ' + " ".join(l[1:]))
+img_list = set(img_list)
+print("the number of images can be detected is {}".format(len(img_list)))
+ori_img_list = ori_img_path.glob("*.tif") 
+ori_img_list = [im.stem for im in ori_img_list] 
+im_detect_none = set(ori_img_list) - img_list
+if len(im_detect_none) != 0:
+    with Pool(5) as p:
+        p.map(_write_empty_xml, im_detect_none)
 
-print("the number of images can be detected is {}".format(len(set(img_list))))
-ori_img_list = ori_img_path.glob("*.tif")
-for im in ori_img_list:
-    im = im.stem
-    if im not in set(img_list):
-        doc = write_xml_noobject(im)
-        tempfile = write_path / (im + ".xml")
-        f = open(tempfile, "w")
-        doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
-        f.close()
-        # print(im)
-
-for img_name in tqdm(dict_content.keys(),desc='Writing for fair1m results:'):
-
-
-    doc = write_xml(img_name,dict_content[img_name])
-
-    tempfile = write_path / (img_name + ".xml")
-    f = open(tempfile, "w")
-    doc.writexml(f, indent='\t', newl='\n', addindent='\t', encoding='utf-8')
-    f.close()
-
+img_detect = dict_content.keys()
+process_map(_write_detect_xml, img_detect, max_workers=10, chunksize=1)
 
 
 
