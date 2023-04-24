@@ -103,16 +103,7 @@ class FineClsHead(BaseModule):
                 in_features=self.shared_out_channels,
                 out_features=cls_channels)
         if init_cfg is None:
-            self.init_cfg = []
-            self.init_cfg += [
-                dict(
-                    type='Kaiming',
-                    layer='Conv2d',
-                    override=[
-                        dict(name='conv'),
-                        dict(name='mask_conv')
-                    ])]
-            self.init_cfg += [
+            self.init_cfg = [
                 dict(
                     type='Kaiming',
                     layer='Linear',
