@@ -6,33 +6,34 @@ from mmcv.runner import BaseModule
 
 
 class SEModule(nn.Module):
-    def __init__(self, in_channels=256, reduction=32):
+    def __init__(self, 
+                 in_channels=256, 
+                 reduction=32, 
+                 bias='auto',
+                 act_cfg=(dict(type='ReLU'), dict(type='Sigmoid'))):
         super(SEModule, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.fc1 = nn.Conv2d(in_channels, in_channels//reduction, 
-                             kernel_size=1, padding=0)
-        self.relu = nn.ReLU(inplace=True)
-        self.fc2 = nn.Conv2d(in_channels//reduction, in_channels,
-                             kernel_size=1, padding=0)
-        self.sigmoid = nn.Sigmoid()
-        self.init_weights()
+        self.conv1 = ConvModule(
+            in_channels=in_channels,
+            out_channels=in_channels//reduction,
+            kernel_size=1,
+            stride=1,
+            bias=bias,
+            act_cfg=act_cfg[0]),
+        self.conv2 = ConvModule(
+            in_channels=in_channels//reduction,
+            out_channels=in_channels,
+            kernel_size=1,
+            stride=1,
+            bias=bias,
+            act_cfg=act_cfg[1]) 
     
-    def init_weights(self):
-        if hasattr(self.fc1, 'weight') and hasattr(self.fc1, 'bias'):
-            nn.init.kaiming_normal_(self.fc1.weight, mode='fan_out', nonlinearity='relu')
-            nn.init.constant_(self.fc1.bias, 0)
-        
-        if hasattr(self.fc2, 'weight') and hasattr(self.fc2, 'bias'):
-            nn.init.kaiming_normal_(self.fc2.weight, mode='fan_out', nonlinearity='relu')
-            nn.init.constant_(self.fc2.bias, 0) 
     
     def forward(self, x):
         out = self.avg_pool(x)
-        out = self.fc1(out)
-        out = self.relu(out)
-        out = self.fc2(out)
-        out = self.sigmoid(out)
-        return x*out
+        out = self.conv1(out)
+        out = self.conv2(out)
+        return x * out
 
 
 class DyReLU(BaseModule):
