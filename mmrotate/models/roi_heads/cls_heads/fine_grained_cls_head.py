@@ -12,7 +12,7 @@ from mmdet.core import multi_apply
 from mmdet.models.losses import accuracy
 from mmdet.models.utils import build_linear_layer
 
-from ...utils.se_layer import SEModule
+from ...utils.se_layer import ResSEModule 
 from ...builder import ROTATED_HEADS, build_loss
 
 
@@ -83,8 +83,7 @@ class FineClsHead(BaseModule):
             norm_cfg=dict(type='BN')
         ) 
         #seblock to class channels message
-        self.se_block = SEModule(in_channels=self.in_channels, reduction=32)
-        
+        self.se_block = ResSEModule(in_channels=self.in_channels, out_channels=self.in_channels, reduction=32) 
         self.shared_fcs, last_layer_dim = self._add_fc_branch(
             self.num_shared_fcs, self.in_channels,True)
         
