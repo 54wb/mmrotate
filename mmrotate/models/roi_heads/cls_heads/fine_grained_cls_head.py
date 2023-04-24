@@ -66,25 +66,24 @@ class FineClsHead(BaseModule):
         
         if self.with_avg_pool:
             self.avg_pool = nn.AvgPool2d(self.roi_feat_size)
-    
         # 3x3 conv and don't change the channels 
-        self.conv = nn.Conv2d(
-            self.in_channels,
-            self.in_channels,
-            kernel_size=3,
-            padding=1)
-        self.BN1 = nn.BatchNorm2d(self.in_channels)
-        #mask_conv make a learnable mask for roi feature
-        self.mask_conv = nn.Conv2d(
-            self.in_channels,
+        self.conv = ConvModule(
+            in_channels=self.in_channels,
             out_channels=self.in_channels,
             kernel_size=3,
-            padding=1)
-        self.BN2 = nn.BatchNorm2d(self.in_channels)
+            padding=1,
+            norm_cfg=dict(type='BN')
+        ) 
+        #mask_conv make a learnable mask for roi feature
+        self.mask_conv = ConvModule(
+            in_channels=self.in_channels,
+            out_channels=1,
+            kernel_size=3,
+            padding=1,
+            norm_cfg=dict(type='BN')
+        ) 
         #seblock to class channels message
         self.se_block = SEModule(in_channels=self.in_channels, reduction=32)
-        # dyhead task attention block
-        # self.dy_head = DyReLU(channels=self.in_channels)
         
         self.shared_fcs, last_layer_dim = self._add_fc_branch(
             self.num_shared_fcs, self.in_channels,True)
@@ -263,17 +262,12 @@ class FineClsHead(BaseModule):
         #mask for align feature
         mask_feat = x
         x = self.conv(x)
-        x = self.BN1(x)
-        x = self.relu(x)
         mask = self.mask_conv(mask_feat)
-        mask = self.BN2(mask)
-        mask = self.relu(mask)
         x = mask*x
         
         # senet block
         x = self.se_block(x)
-        # x = self.dy_head(x)
-        
+         
         #two shared fcs for cls
         if self.num_shared_fcs > 0:
             x = x.flatten(1)
