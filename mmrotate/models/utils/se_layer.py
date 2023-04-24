@@ -5,21 +5,17 @@ from mmcv.cnn import ConvModule
 from mmcv.runner import BaseModule
 
 
-class SEModule(nn.Module):
+class SEModule(BaseModule):
     def __init__(self, 
                  in_channels=256, 
                  reduction=32, 
                  bias='auto',
                  act_cfg=(dict(type='ReLU'), dict(type='Sigmoid'))):
         super(SEModule, self).__init__()
+        if isinstance(act_cfg, dict):
+            act_cfg = (act_cfg, act_cfg)
+            assert len(act_cfg) == 2
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.conv1 = ConvModule(
-            in_channels=in_channels,
-            out_channels=in_channels//reduction,
-            kernel_size=1,
-            stride=1,
-            bias=bias,
-            act_cfg=act_cfg[0]),
         self.conv2 = ConvModule(
             in_channels=in_channels//reduction,
             out_channels=in_channels,
@@ -27,7 +23,14 @@ class SEModule(nn.Module):
             stride=1,
             bias=bias,
             act_cfg=act_cfg[1]) 
-    
+        self.conv1 = ConvModule(
+            in_channels=in_channels,
+            out_channels=in_channels//reduction,
+            kernel_size=1,
+            stride=1,
+            bias=bias,
+            act_cfg=act_cfg[0]
+        ) 
     
     def forward(self, x):
         out = self.avg_pool(x)
