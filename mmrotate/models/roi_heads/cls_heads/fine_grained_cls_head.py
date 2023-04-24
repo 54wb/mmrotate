@@ -77,10 +77,10 @@ class FineClsHead(BaseModule):
         #mask_conv make a learnable mask for roi feature
         self.mask_conv = nn.Conv2d(
             self.in_channels,
-            out_channels=1,
+            out_channels=self.in_channels,
             kernel_size=3,
             padding=1)
-        self.BN2 = nn.BatchNorm2d(1)
+        self.BN2 = nn.BatchNorm2d(self.in_channels)
         #seblock to class channels message
         self.se_block = SEModule(in_channels=self.in_channels, reduction=32)
         # dyhead task attention block
